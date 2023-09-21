@@ -3,6 +3,7 @@ Make your coming Zumo32U4-program just a little easier to write
 
 ... work in progress
 
+'''
 #ifndef zumoModules_h   /* Denne linje kommer altid først i en header fil */
 #define zumoModules_h
 
@@ -47,3 +48,5 @@ public: // Alt nedenfor kan tilgås i .ino fil
 };
 
 #endif // Denne linje kommer altid sidst i en header fil
+
+'''
