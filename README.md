@@ -1,9 +1,15 @@
 # Zumo32U4Modules
 Make your coming Zumo32U4-program just a little easier to write
-
-... work in progress
-
-'''
+## zumo32U4Modules.h
+Et library beregnet til at gøre programmeringen af en Zumo32U4 hurtigere og nemmere. Dvs. at man med librariet ikke behøver at 
+* inkludere <Zumo32U.h> & <Wire.h>
+* konstruere objekter beregnet til de respektive komponenter
+* setup sensorer som kræver yderligere mén
+* foretage handlinger med sagte komponenter
+  
+Opdateret: 21. september 2023
+(work in progress)
+``` 
 #ifndef zumoModules_h   /* Denne linje kommer altid først i en header fil */
 #define zumoModules_h
 
@@ -49,4 +55,4 @@ public: // Alt nedenfor kan tilgås i .ino fil
 
 #endif // Denne linje kommer altid sidst i en header fil
 
-'''
+```
