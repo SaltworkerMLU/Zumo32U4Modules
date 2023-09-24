@@ -1,58 +1,95 @@
 # Zumo32U4Modules
-Make your coming Zumo32U4-program just a little easier to write
-## zumo32U4Modules.h
+![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.png)
+
 Et library beregnet til at gøre programmeringen af en Zumo32U4 hurtigere og nemmere. Dvs. at man med librariet ikke behøver at 
 * inkludere <Zumo32U.h> & <Wire.h>
 * konstruere objekter beregnet til de respektive komponenter
 * setup sensorer som kræver yderligere mén
 * foretage handlinger med sagte komponenter
-  
-Opdateret: 21. september 2023
-(work in progress)
-``` 
-#ifndef zumoModules_h   /* Denne linje kommer altid først i en header fil */
-#define zumoModules_h
 
-#include <Arduino.h>  // En header fil, oprindeligt fra programmeringssproget C, påkræver librariet som gør .ino hvad det er.
+# Indholdsfortegnelse
++ [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Zumo32u4modulesh)
++ [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Get-started)
++ [Method 1. ](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#get-started)
++ [Method 2. ](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#get-started)
+
+# Zumo32U4Modules.h
+Her vises librariet Zumo32U4Modules.h med næsten ingen kommentarer
+``` 
+#ifndef Zumo32U4Modules_h   /* Denne linje kommer altid først i en header fil */
+
+#include <Arduino.h>  // En header fil, oprindeligt fra C, påkræver librariet som gør .ino hvad det er.
 #include <Wire.h>     // Zumo32U4.h er afhængig af følgende library
 #include <Zumo32U4.h> // Tilgå Zumo32U4.h library her: https://pololu.github.io/zumo-32u4-arduino-library/
 
-class zumoModules
-{
-public: // Alt nedenfor kan tilgås i .ino fil
-  void LEDblink(int interval);
-  
-  Zumo32U4LCD LCD;                      // DISPLAY 1: Det grønne display
-  Zumo32U4OLED OLED;                    // DISPLAY 2: Det blå display
+class Zumo32U4ModulesButtonBuzzer : protected Zumo32U4ButtonA, 
+                                    protected Zumo32U4ButtonB,
+                                    protected Zumo32U4ButtonC, 
+                                    protected Zumo32U4Buzzer { 
+public: 
+  int checkButtonPress();
+  int getButtonRelease();
+  void buzzer(int freq=400, int duration=50, char volume=10) { playFrequency(freq, duration, volume); }
+  int buttonBootup(int attention=10, int windup=800, int freq=400); 
+};
 
-  void OLEDdisplayMenu(String A, String B, String C);
-  
-  Zumo32U4ButtonA buttonA;
-  Zumo32U4ButtonB buttonB;
-  Zumo32U4ButtonC buttonC;
-  Zumo32U4Buzzer buzzer;                // Lav støj med zumo
-  int buttonBootup(int attention=10, int windup=800);
-  
-  Zumo32U4LineSensors lineSensors;      // Mål reflektion af pladen Zumo kører på med forskellige sensorer.
-  Zumo32U4IMU imu;                      // Måler Acceleration, vinkelacceleration, magnetfelt
-  Zumo32U4ProximitySensors proxSensors; // Mål proximitet. IKKE afstand. Værdier går fra 0-6
-  void sensorBootup(bool line_sensors=true, bool IMU=true, bool prox_sensors=true);
-  uint16_t lineSensorValues[3]; // array af lineSensorValues
-  int getLineSensorValue(int index=-1);
-  int getProximitySensorValue(bool index);
-  void gyroEndCondition();
+class Zumo32U4ModulesMotors : protected Zumo32U4Motors { 
+public: 
+  void motorDrive(int left=0, int right=0, bool bakgear=false); 
+};
 
-  Zumo32U4Motors motors;                // Motorer. Kør med zumo
-  void motorDrive(int left=0, int right=0);
-  void motorReverse(bool bakgear);
-
-  Zumo32U4Encoders encoders;            // Omdrejningsmåler på motorer
+class Zumo32U4ModulesEncoders : protected Zumo32U4Encoders { 
+public: 
   float motorOmdrejninger(bool index);
   float motorOmdrejningerReset(bool index);
+};
 
-  Zumo32U4IRPulses IRPulses;            // Send IR-pulses. Objektet gør ikke mere end det.
+class Zumo32U4ModulesSensors :  protected Zumo32U4ProximitySensors,
+                                protected Zumo32U4LineSensors, 
+                                protected Zumo32U4IMU {
+public:
+  uint16_t lineSensorValues[3];
+  int16_t* acc[3] = {&a.x, &a.y, &a.z}; 
+  int16_t* gyro[3] = {&g.x, &g.y, &g.z};
+  int16_t* mag[3] = {&m.x, &m.y, &m.z};
+  Zumo32U4ModulesSensors();
+  int getProximitySensorValue(bool index);
+  int getLineSensorValue(int index=-1);
+  int16_t getIMUValue(char mag='_');
+};
+
+class Zumo32U4Modules : public Zumo32U4ModulesButtonBuzzer, 
+                        public Zumo32U4ModulesMotors, 
+                        public Zumo32U4ModulesEncoders, 
+                        public Zumo32U4ModulesSensors
+{
+protected:
+  int displayLine = 0; // Bruges eksklusivt til class Zumo32U4ModulesLCD & class Zumo32U4ModulesOLED
+public:
+  void LEDblink(int interval); 
+  void IMUEndCondition();
+};
+
+class Zumo32U4ModulesLCD : public Zumo32U4Modules, protected Zumo32U4LCD {
+public:
+  Zumo32U4ModulesLCD();
+  void displayMenu();
+  void displayPrint(String input, uint8_t X=0, bool newLine=false, bool clear=false);
+};
+
+class Zumo32U4ModulesOLED : public Zumo32U4Modules, protected Zumo32U4OLED {
+public:
+  Zumo32U4ModulesOLED();
+  void displayMenu();
+  void displayPrint(String input, uint8_t X=0, bool newLine=false, bool clear=false);
 };
 
 #endif // Denne linje kommer altid sidst i en header fil
-
 ```
+Opdateret: 24. september 2023
+
+# Get Started
+There are 2 ways to use this library:
+## 1. Download Zip
+...
+## 2. Insert Zumo32U4Modules.cpp & Zumo32U4Modules.h directly into own repository
