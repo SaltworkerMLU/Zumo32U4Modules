@@ -1,6 +1,14 @@
 # TO-DO LIST
 * Make library and GitHub repository fully translated to english
 * Make use of OLED display graphics functionality (Currently limited to text)
+
+# Indholdsfortegnelse
++ [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#zumo32u4modules)
++ [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Zumo32u4modulesh)
++ [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Get-started)
+  + [Method A](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#get-started)
+  + [Method B](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#get-started)
+
 # Zumo32U4Modules
 ![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.png)
 
@@ -9,12 +17,6 @@ Et library beregnet til at gøre programmeringen af en Zumo32U4 hurtigere og nem
 * konstruere objekter beregnet til de respektive komponenter
 * setup sensorer som kræver yderligere mén
 * foretage handlinger med sagte komponenter
-
-# Indholdsfortegnelse
-+ [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Zumo32u4modulesh)
-+ [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Get-started)
-+ [Method A. ](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#get-started)
-+ [Method B. ](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#get-started)
 
 # Zumo32U4Modules.h
 Her vises librariet Zumo32U4Modules.h med næsten ingen kommentarer
@@ -101,7 +103,7 @@ There are 2 ways to use an Arduino library:
 ![image](Zumo32U4Modules_Media/Zumo32U4Modules_Add.zip_Library.png)
 
 Zumo32U4Modules can now be imported by using #include <Zumo32U4Modules.h>
-## B. Insert Zumo32U4Modules.cpp & Zumo32U4Modules.h directly into own repository
+## B. Insert Zumo32U4Modules.cpp & Zumo32U4Modules.h directly into own Arduino project/sketch
 1.  Download ZIP folder of Zumo32U4Modules
 2.  Like the title says, extract ZIP folder to your current Arduino project/sketch
    
