@@ -1,4 +1,4 @@
-#include "Zumo32U4ModulesExperiment.h" // I .cpp filen definéres funktionerne initialiseret i .h filen
+#include "Zumo32U4Modules.h" // I .cpp filen definéres funktionerne initialiseret i .h filen
 
 int Zumo32U4ModulesButtonBuzzer::buttonBootup(int attention=10, int windup=800) {
   int buttonPress = 0;
