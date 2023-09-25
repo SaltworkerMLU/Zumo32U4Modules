@@ -1,4 +1,4 @@
-# TO-DO LIST:
+# TO-DO LIST
 * Make library and GitHub repository fully translated to english
 * Make use of OLED display graphics functionality (Currently limited to text)
 # Zumo32U4Modules
@@ -89,10 +89,10 @@ public:
 
 #endif // Denne linje kommer altid sidst i en header fil
 ```
-Opdateret: 24. september 2023
+(Zumo32U4Modules.h sidst opdateret: 24. september 2023)
 
 # Get Started
-There are 2 ways to use this library:
+There are 2 ways to use an Arduino library:
 ## A. Download Zip to Arduino IDE
 1.  Download ZIP folder of Zumo32U4Modules
 2.  Open Arduino IDE
