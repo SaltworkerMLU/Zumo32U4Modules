@@ -3,11 +3,11 @@
 * Make use of OLED display graphics functionality (Currently limited to text)
 
 # Indholdsfortegnelse
-+ [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#zumo32u4modules)
-+ [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Zumo32u4modulesh)
-+ [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Get-started)
-  + [Method A](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#get-started)
-  + [Method B](https://github.com/SaltworkerMLU/Zumo32U4Modules/edit/main/README.md#get-started)
++ [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
++ [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modulesh)
++ [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#get-started)
+  + [Method A](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#a-download-zip-to-arduino-ide)
+  + [Method B](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#b-insert-zumo32u4modulescpp--zumo32u4modulesh-directly-into-own-arduino-projectsketch)
 
 # Zumo32U4Modules
 ![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.png)
