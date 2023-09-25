@@ -6,8 +6,8 @@
 + [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
 + [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modulesh)
 + [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#get-started)
-  + [Method A](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#a-download-zip-to-arduino-ide)
-  + [Method B](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#b-insert-zumo32u4modulescpp--zumo32u4modulesh-directly-into-own-arduino-projectsketch)
+  + [Method A: Download Zip with Arduino IDE](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#a-download-zip-to-arduino-ide)
+  + [Method B: Manual insertion of extracted ZIP folder to Arduino sketch](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#b-insert-zumo32u4modulescpp--zumo32u4modulesh-directly-into-own-arduino-projectsketch)
 
 # Zumo32U4Modules
 ![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.png)
@@ -95,7 +95,7 @@ public:
 
 # Get Started
 There are 2 ways to use an Arduino library:
-## A. Download Zip to Arduino IDE
+## A: Download Zip with Arduino IDE
 1.  Download ZIP folder of Zumo32U4Modules
 2.  Open Arduino IDE
 3.  Add the downloaded ZIP to your libraries
@@ -103,8 +103,8 @@ There are 2 ways to use an Arduino library:
 ![image](Zumo32U4Modules_Media/Zumo32U4Modules_Add.zip_Library.png)
 
 Zumo32U4Modules can now be imported by using #include <Zumo32U4Modules.h>
-## B. Insert Zumo32U4Modules.cpp & Zumo32U4Modules.h directly into own Arduino project/sketch
+## B: Manual insertion of extracted ZIP folder to Arduino sketch
 1.  Download ZIP folder of Zumo32U4Modules
-2.  Like the title says, extract ZIP folder to your current Arduino project/sketch
+2.  Like the title says, extract ZIP folder to your current Arduino sketch
    
 Zumo32U4Modules can then be imported by using #include "Zumo32U4Modules.h"
