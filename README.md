@@ -10,16 +10,19 @@
   + [Method B: Manual insertion of extracted ZIP folder to Arduino sketch](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#b-manual-insertion-of-extracted-zip-folder-to-arduino-sketch)
 
 # Zumo32U4Modules
+Simplify the programming process of your comming Zumo32U4 project. Just import this library, create the nessecary object(s), and you're good to go to use the components in accordance to constructed object(s).
+
 ![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.png)
 
-Et library beregnet til at gøre programmeringen af en Zumo32U4 hurtigere og nemmere. Dvs. at man med librariet ikke behøver at 
-* inkludere <Zumo32U.h> & <Wire.h>
-* konstruere objekter beregnet til de respektive komponenter
-* setup sensorer som kræver yderligere mén
-* foretage handlinger med sagte komponenter
+Furthermore, this library imports the library "Zumo32U4.h" which has the following functions not in any classes therefore also accessible in this library attached:
+* ledRed(bool)
+* ledYellow(bool)
+* ledGreen(bool)
+* readBatteryMillivolts(): int
+* isPowerPresent(): bool // is the Zumo32U4 connected to another device, e.g. computer, via. USB cable?
 
 # Zumo32U4Modules.h
-Her vises librariet Zumo32U4Modules.h med næsten ingen kommentarer
+Here is "Zumo32U4Modules.h" with almost no comments to shorten it.
 ``` 
 #ifndef Zumo32U4Modules_h   /* Denne linje kommer altid først i en header fil */
 
@@ -91,7 +94,7 @@ public:
 
 #endif // Denne linje kommer altid sidst i en header fil
 ```
-(Zumo32U4Modules.h sidst opdateret: 24. september 2023)
+("Zumo32U4Modules.h" last updated: 24. september 2023)
 
 # Get Started
 There are 2 ways to use an Arduino library:
