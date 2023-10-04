@@ -103,7 +103,7 @@ public:
 
 #endif // This line always comes last in a header file
 ```
-("Zumo32U4Modules.h" last updated: 24. september 2023)
+("Zumo32U4Modules.h" last updated: 4. October 2023)
 
 # Get Started
 There are 2 ways to use an Arduino library:
