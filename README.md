@@ -20,6 +20,7 @@ Furthermore, this library imports the library "Zumo32U4.h" which has the followi
 * readBatteryMillivolts(): int
 * isPowerPresent(): bool // is the Zumo32U4 connected to another device, e.g. computer, via. USB cable?
 
+The fact that the library "Zumo32U4.h" is imported also means you still can create objects of the ordinary Zumo32U4 classes alongside Zumo32U4Modules classes.
 # Zumo32U4Modules.h
 Here is "Zumo32U4Modules.h" with almost no comments to shorten it (excluding display custom characters).
 ``` 
@@ -34,11 +35,9 @@ class Zumo32U4ModulesButtonBuzzer : protected Zumo32U4ButtonA,
                                     protected Zumo32U4ButtonC, 
                                     protected Zumo32U4Buzzer { 
 public: 
-  int checkButtonPress() { return Zumo32U4ButtonA::isPressed() + 
-                                  Zumo32U4ButtonB::isPressed() * 2 + 
-                                  Zumo32U4ButtonC::isPressed() * 4; }
+  int checkButtonPress();
   int getButtonRelease();
-  void buzzer(int frequency=400, int duration=50, int volume=10){ Zumo32U4Buzzer::playFrequency(frequency, duration, volume); }
+  void buzzer(int frequency=400, int duration=50, int volume=10);
   int buttonBootup(int attention=10, int windup=800);
 };
 
