@@ -1,8 +1,7 @@
 # TO-DO LIST
-* Make library and GitHub repository fully translated to english
 * Make use of OLED display graphics functionality (Currently limited to text)
 
-# Indholdsfortegnelse
+# Table of contents
 + [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
 + [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modulesh)
 + [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#get-started)
@@ -12,9 +11,9 @@
 # Zumo32U4Modules
 Simplify the programming process of your comming Zumo32U4 project. Just import this library, create the nessecary object(s), and you're good to go to use the components in accordance to constructed object(s).
 
-![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.png)
+![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.jpg)
 
-Furthermore, this library imports the library "Zumo32U4.h" which has the following functions not in any classes therefore also accessible in this library attached:
+Furthermore, this library imports the library "Zumo32U4.h" which has the following functions outside of any classes therefore also accessible in this library attached:
 * ledRed(bool)
 * ledYellow(bool)
 * ledGreen(bool)
@@ -22,34 +21,36 @@ Furthermore, this library imports the library "Zumo32U4.h" which has the followi
 * isPowerPresent(): bool // is the Zumo32U4 connected to another device, e.g. computer, via. USB cable?
 
 # Zumo32U4Modules.h
-Here is "Zumo32U4Modules.h" with almost no comments to shorten it.
+Here is "Zumo32U4Modules.h" with almost no comments to shorten it (excluding display custom characters).
 ``` 
-#ifndef Zumo32U4Modules_h   /* Denne linje kommer altid først i en header fil */
+#ifndef Zumo32U4Modules_h   /* This line always comes first in a header file */
 
-#include <Arduino.h>  // En header fil, oprindeligt fra C, påkræver librariet som gør .ino hvad det er.
-#include <Wire.h>     // Zumo32U4.h er afhængig af følgende library
-#include <Zumo32U4.h> // Tilgå Zumo32U4.h library her: https://pololu.github.io/zumo-32u4-arduino-library/
+#include <Arduino.h>  // A header file, originally from C, required the library that makes .ino what it is.
+#include <Wire.h>     // Zumo32U4.h depends on this library to function properly
+#include <Zumo32U4.h> // Access Zumo32U4.h library here: https://pololu.github.io/zumo-32u4-arduino-library/
 
 class Zumo32U4ModulesButtonBuzzer : protected Zumo32U4ButtonA, 
                                     protected Zumo32U4ButtonB,
                                     protected Zumo32U4ButtonC, 
                                     protected Zumo32U4Buzzer { 
 public: 
-  int checkButtonPress();
+  int checkButtonPress() { return Zumo32U4ButtonA::isPressed() + 
+                                  Zumo32U4ButtonB::isPressed() * 2 + 
+                                  Zumo32U4ButtonC::isPressed() * 4; }
   int getButtonRelease();
-  void buzzer(int freq=400, int duration=50, char volume=10) { playFrequency(freq, duration, volume); }
-  int buttonBootup(int attention=10, int windup=800, int freq=400); 
+  void buzzer(int frequency=400, int duration=50, int volume=10){ Zumo32U4Buzzer::playFrequency(frequency, duration, volume); }
+  int buttonBootup(int attention=10, int windup=800);
 };
 
 class Zumo32U4ModulesMotors : protected Zumo32U4Motors { 
 public: 
-  void motorDrive(int left=0, int right=0, bool bakgear=false); 
+  void motorDrive(int left=0, int right=0, bool reverse=false); 
 };
 
 class Zumo32U4ModulesEncoders : protected Zumo32U4Encoders { 
 public: 
-  float motorOmdrejninger(bool index);
-  float motorOmdrejningerReset(bool index);
+  float motorDistance(bool index);
+  float motorDistanceReset(bool index);
 };
 
 class Zumo32U4ModulesSensors :  protected Zumo32U4ProximitySensors,
@@ -57,23 +58,28 @@ class Zumo32U4ModulesSensors :  protected Zumo32U4ProximitySensors,
                                 protected Zumo32U4IMU {
 public:
   uint16_t lineSensorValues[3];
+  int16_t* mag[3] = {&m.x, &m.y, &m.z};
   int16_t* acc[3] = {&a.x, &a.y, &a.z}; 
   int16_t* gyro[3] = {&g.x, &g.y, &g.z};
-  int16_t* mag[3] = {&m.x, &m.y, &m.z};
+  int16_t gyroOffset;  // When gyro[index] = gyroOffset: No change in angle
+  uint16_t LastUpdate; // Earlier measurement of time with micros(). "Old time"
+  uint32_t turnAngle = 0; // Current calibrated angle of Zumo32U4
+
   Zumo32U4ModulesSensors();
   int getProximitySensorValue(bool index);
   int getLineSensorValue(int index=-1);
-  int16_t getIMUValue(char mag='_');
+  int16_t getIMUvalue(char m_a_g='_');
+  int16_t calibrate(char m_a_g, int index, int iterations=1000); // EXPERIMENTAL
+  uint32_t dAngle(int index); // EXPERIMENTAL
 };
 
 class Zumo32U4Modules : public Zumo32U4ModulesButtonBuzzer, 
                         public Zumo32U4ModulesMotors, 
                         public Zumo32U4ModulesEncoders, 
-                        public Zumo32U4ModulesSensors
-{
-protected:
-  int displayLine = 0; // Bruges eksklusivt til class Zumo32U4ModulesLCD & class Zumo32U4ModulesOLED
+                        public Zumo32U4ModulesSensors {
 public:
+  int displayLine = 0; // Exclusively used for class Zumo32U4ModulesLCD & class Zumo32U4ModulesOLED
+  
   void LEDblink(int interval); 
   void IMUEndCondition();
 };
@@ -82,17 +88,21 @@ class Zumo32U4ModulesLCD : public Zumo32U4Modules, protected Zumo32U4LCD {
 public:
   Zumo32U4ModulesLCD();
   void displayMenu();
-  void displayPrint(String input, uint8_t X=0, bool newLine=false, bool clear=false);
+  void displayPrint(char input[], bool clear=false, bool newLine=true); // Example: LCDprint("Hello World!");
+  void displayCustomCharacters(char custom1[]={}, char custom2[]={}, char custom3[]={}, char custom4[]={}, 
+                               char custom5[]={}, char custom6[]={}, char custom7[]={}, char custom8[]={});
 };
 
 class Zumo32U4ModulesOLED : public Zumo32U4Modules, protected Zumo32U4OLED {
 public:
   Zumo32U4ModulesOLED();
   void displayMenu();
-  void displayPrint(String input, uint8_t X=0, bool newLine=false, bool clear=false);
+  void displayPrint(char input[], bool clear=false, bool newLine=true); // Eksempel: OLEDprint("Hello World!");
+  void displayCustomCharacters(char custom1[]={}, char custom2[]={}, char custom3[]={}, char custom4[]={}, 
+                               char custom5[]={}, char custom6[]={}, char custom7[]={}, char custom8[]={});
 };
 
-#endif // Denne linje kommer altid sidst i en header fil
+#endif // This line always comes last in a header file
 ```
 ("Zumo32U4Modules.h" last updated: 24. september 2023)
 
