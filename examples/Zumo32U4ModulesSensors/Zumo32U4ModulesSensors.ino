@@ -1,14 +1,14 @@
 /*
- * Dette program viser hvordan klassen Zumo32U4ModulesSensors benyttes
- * Der initialiseres først Proximity Sensor og Line Follower Sensor vha. constructoren (don't worry abou it)
- * IMU initialiseres on the go ved brug af getIMUValue() hvor magnetometer, accelerometer & gyrometer aflæses.
- * Desuden udvindes Line Follower Sensor values i array lineSensorValues[3] med getLineSensorValues().
+ * This program shows how to use the class Zumo32U4ModulesSensors.
+ * First, initialize proximity- and lineFollowerSensors (don't worry abou it)
+ * IMU will be initialized on the go with getIMUValue() where magnetometer, accelerometer & gyrometer are read.
+ * lineFollowerSensor values are stored in lineSensorValues[3] 
+ * proximitySensor returns one value at a time using getProximitySensorValue(bool)
  * 
- * Når værdierne er aflæst fra sensorerne, er det blot et spørgsmål om at udvinde disse aflæsninger.
- * Alle aflæste værdier printes nemlig til Serial monitor i formaten vist under sprintf().
+ * When these values are read, it's only a matter is printing all values to Serial.monitor using sprintf()
  */
 
-#include "Zumo32U4Modules.h"
+#include <Zumo32U4Modules.h>
 Zumo32U4ModulesSensors zumoBot;
 
 
@@ -21,15 +21,15 @@ static char buffer[80];
 
 void loop() {
   // put your main code here, to run repeatedly:
-  zumoBot.getLineSensorValue(); // Lagrer resultat heri i array lineSensorValues[3]
-  zumoBot.getIMUValue(); // Hvor char 'm' kun giver mag[], 'a' kun acc[] & 'g' kun gyro[]
+  zumoBot.getLineSensorValue(); // Store read values in lineSensorValues[3]
+  zumoBot.getIMUValue(); // Where 'm' only gives mag[], 'a' only acc[] & 'g' only gyro[]
   sprintf(buffer, "%i %i   \t%i %i %i  \t%i %i %i   \t%i %i %i   \t%i %i %i\n",
     zumoBot.getProximitySensorValue(0),
     zumoBot.getProximitySensorValue(1),
     zumoBot.lineSensorValues[0],
     zumoBot.lineSensorValues[1],
     zumoBot.lineSensorValues[2],
-    *zumoBot.mag[0], // Bemærk brugen af en pointer *. Denne skal være med grundet hvordan IMU-værdierne lagres i klassen
+    *zumoBot.mag[0], // The use of pointers for IMU-values are needed due to how the arrays are stored in the class.
     *zumoBot.mag[1],
     *zumoBot.mag[2],
     *zumoBot.acc[0],

@@ -1,14 +1,14 @@
 /*
- * Dette program viser hvordan klassen Zumo32U4ModulesMotros benyttes.
- * Der køres med tilfældige hastigheder med de 2 motorer vha. funktionen motorDrive()
- * Efterfølgende køres der tilbage til startpositionen ved at vende om på værdierne.
+ * This program shows how to use the class Zumo32U4ModulesMotors
+ * The 2 motors are set to different speeds using random()
+ * Aterwards, the ZUmo32U4 drives back to its original position
  */
 
-#include "Zumo32U4Modules.h"
+#include <Zumo32U4Modules.h>
 Zumo32U4ModulesMotors zumoBot;
 
 int left, right;
-bool bakgear = true;
+bool reverse = true;
 
 void setup() {
   // put your setup code here, to run once:
@@ -16,14 +16,14 @@ void setup() {
 }
 void loop() {
   // put your main code here, to run repeatedly:
-  left = random(-400, 401); // Motorer kan gives værdier fra -400 til 400
+  left = random(-400, 401); // The motors take input(s) from -400 to 400
   right = random(-400, 401);
-  bakgear = !bakgear;
-  zumoBot.motorDrive(left, right, bakgear);
+  reverse = !reverse;
+  zumoBot.motorDrive(left, right, reverse);
   Serial.println((String)left + "\t" + (String)right);
   delay(1000);
-  bakgear = !bakgear;
-  zumoBot.motorDrive(left, right, bakgear);
+  reverse = !reverse;
+  zumoBot.motorDrive(left, right, reverse);
   Serial.println((String)-left + "\t" + (String)-right);
   delay(1000);
 }
