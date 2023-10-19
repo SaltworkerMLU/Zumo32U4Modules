@@ -24,7 +24,7 @@ Furthermore, this library imports the library "Zumo32U4.h" which has the followi
 
 The fact that the library "Zumo32U4.h" is imported also means you still can create objects of the ordinary Zumo32U4 classes alongside Zumo32U4Modules classes.
 # Zumo32U4Modules.h
-Here is "Zumo32U4Modules.h" with almost no comments to shorten it (excluding display custom characters).
+Here is "Zumo32U4Modules.h" with almost no comments to shorten it.
 ``` 
 #ifndef Zumo32U4Modules_h   // This line always comes first in a header file
 
