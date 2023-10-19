@@ -15,7 +15,24 @@ Simplify the programming process of your comming Zumo32U4 project. Just import t
 
 ![image](Zumo32U4Modules_Media/Zumo32U4Modules.jpg)
 
-Furthermore, this library imports the library "Zumo32U4.h" which has the following functions outside of any classes therefore also accessible in this library attached:
+NOTE: These 8 custom characters come preloaded with Zumo32U4Modules.h
+* forwardArrows
+* forwardArrowsSolid
+* reverseArrows
+* reverseArrowsSolid
+* leftArrow
+* rightArrow
+* backArrow
+* backArrowReverse
+
+They are explicitly used in the constructors Zumo32U4ModulesLCD & Zumo32U4ModulesOLED with the function:
+
+```
+  displayCustomCharacters(forwardArrows, forwardArrowsSolid, reverseArrows, reverseArrowsSolid,
+                          leftArrow, rightArrow, backArrow, backArrowReverse); // Default configuration of custom characters
+```
+
+Furthermore, this library imports the library ```#include <Zumo32U4.h>``` which has the following functions outside of any classes therefore also accessible in this library attached:
 * ledRed(bool)
 * ledYellow(bool)
 * ledGreen(bool)
@@ -141,11 +158,12 @@ const char leftArrow[] PROGMEM = {2, 6, 14, 30, 14, 6, 2, 0};
 ("Zumo32U4Modules.h" last updated: 19. October 2023)
 
 # Get Started
-First off, open Arduino IDE. Here, open File\Preferences and under "Additional board manager URLs" insert the following link:
+1.  Open Arduino IDE.
+2.  Open File\Preferences and under "Additional board manager URLs" insert the following link: https://files.pololu.com/arduino/package_pololu_index.json
+3.  Open boards manager. Search for the board "Pololu A-Star Boards". Install it.
+4.  Open bibrary manager. Search for the library "Zumo32U4". Install it.
 
-https://files.pololu.com/arduino/package_pololu_index.json
-
-Doing so, you will be able to find the library Zumo32U4 under library manager. Installing it will be essential for Zumo32U4Modules to function.
+You will now be able to use ```#include <Zumo32U4.h>```, which is required to use Zumo32U4Modules.
 
 To install and use Zumo32U4Modules, here are 2 methods provided:
 ## A: Download Zip with Arduino IDE
@@ -155,9 +173,9 @@ To install and use Zumo32U4Modules, here are 2 methods provided:
 
 ![image](Zumo32U4Modules_Media/Zumo32U4Modules_Add.zip_Library.png)
 
-Zumo32U4Modules can now be imported by using #include <Zumo32U4Modules.h>
+Zumo32U4Modules can now be imported by using ```#include <Zumo32U4Modules.h>```
 ## B: Manual insertion of extracted ZIP folder to Arduino sketch
 1.  Download ZIP folder of Zumo32U4Modules
 2.  Like the title says, extract ZIP folder to your current Arduino sketch
    
-Zumo32U4Modules can then be imported by using #include "Zumo32U4Modules.h"
+Zumo32U4Modules can then be imported by using ```#include "Zumo32U4Modules.h"```
