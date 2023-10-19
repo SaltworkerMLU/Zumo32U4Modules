@@ -9,51 +9,52 @@
  */
 
 #include <Zumo32U4Modules.h>
-Zumo32U4ModulesButtonBuzzer zumoBot;
+Zumo32U4ModulesButtons buttons;
+Zumo32U4ModulesBuzzer buzzer;
 
 int protocol;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  protocol = zumoBot.buttonBootup();
+  protocol = buttons.buttonBootup();
 }
 void loop() {
   // put your main code here, to run repeatedly:
   switch(protocol) {
     case 1: { // Print combination of buttonPresses
-      Serial.println(zumoBot.checkButtonPress());
+      Serial.println(buttons.checkButtonPress());
       delay(50);
       break;
     }
     case 2: { // Print button as number when released
-      Serial.println(zumoBot.getButtonRelease());
+      Serial.println(buttons.getButtonRelease());
       break;
     }
     case 3: {
-        switch (zumoBot.checkButtonPress()) {
+        switch (buttons.checkButtonPress()) {
           case 0:
             break;
           case 1:
-            zumoBot.buzzer(); // 400Hz sound
+            buzzer.buzzer(); // 400Hz sound
             break;
           case 2:
-            zumoBot.buzzer(800); // 800Hz sound
+            buzzer.buzzer(800); // 800Hz sound
             break;
           case 3:
-            zumoBot.buzzer(1200); // 1200Hz sound
+            buzzer.buzzer(1200); // 1200Hz sound
             break;
           case 4:
-            zumoBot.buzzer(1600); // 1600Hz sound
+            buzzer.buzzer(1600); // 1600Hz sound
             break;
           case 5:
-            zumoBot.buzzer(2000); // 2000Hz sound
+            buzzer.buzzer(2000); // 2000Hz sound
             break;
           case 6:
-            zumoBot.buzzer(2400); // 2400Hz sound
+            buzzer.buzzer(2400); // 2400Hz sound
             break;
           case 7:
-            zumoBot.buzzer(2800); // 2800Hz sound
+            buzzer.buzzer(2800); // 2800Hz sound
             break;
           }
           delayMicroseconds(1);

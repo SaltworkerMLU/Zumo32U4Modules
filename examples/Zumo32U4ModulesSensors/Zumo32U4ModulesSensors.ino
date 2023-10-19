@@ -9,35 +9,37 @@
  */
 
 #include <Zumo32U4Modules.h>
-Zumo32U4ModulesSensors zumoBot;
-
+Zumo32U4ModulesIMU IMU;
+Zumo32U4ModulesLineSensors LineSensors;
+Zumo32U4ModulesProximitySensors ProximitySensors;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  IMU.initIMU();
 }
 
 static char buffer[80];
 
 void loop() {
   // put your main code here, to run repeatedly:
-  zumoBot.getLineSensorValue(); // Store read values in lineSensorValues[3]
-  zumoBot.getIMUValue(); // Where 'm' only gives mag[], 'a' only acc[] & 'g' only gyro[]
+  LineSensors.getLineSensorValue(); // Store read values in lineSensorValues[3]
+  IMU.getIMUvalue(); // Where 'm' only gives mag[], 'a' only acc[] & 'g' only gyro[]
   sprintf(buffer, "%i %i   \t%i %i %i  \t%i %i %i   \t%i %i %i   \t%i %i %i\n",
-    zumoBot.getProximitySensorValue(0),
-    zumoBot.getProximitySensorValue(1),
-    zumoBot.lineSensorValues[0],
-    zumoBot.lineSensorValues[1],
-    zumoBot.lineSensorValues[2],
-    *zumoBot.mag[0], // The use of pointers for IMU-values are needed due to how the arrays are stored in the class.
-    *zumoBot.mag[1],
-    *zumoBot.mag[2],
-    *zumoBot.acc[0],
-    *zumoBot.acc[1],
-    *zumoBot.acc[2],
-    *zumoBot.gyro[0],
-    *zumoBot.gyro[1],
-    *zumoBot.gyro[2]
+    ProximitySensors.getProximitySensorValue(0),
+    ProximitySensors.getProximitySensorValue(1),
+    LineSensors.lineSensorValues[0],
+    LineSensors.lineSensorValues[1],
+    LineSensors.lineSensorValues[2],
+    *IMU.mag[0], // The use of pointers for IMU-values are needed due to how the arrays are stored in the class.
+    *IMU.mag[1],
+    *IMU.mag[2],
+    *IMU.acc[0],
+    *IMU.acc[1],
+    *IMU.acc[2],
+    *IMU.gyro[0],
+    *IMU.gyro[1],
+    *IMU.gyro[2]
   );
   Serial.print(buffer);
   delay(50);
