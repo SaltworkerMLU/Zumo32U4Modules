@@ -173,9 +173,9 @@ const char leftArrow[] PROGMEM = {2, 6, 14, 30, 14, 6, 2, 0}; // This character 
 
 # Get Started
 1.  Open Arduino IDE.
-2.  Open File\Preferences and under "Additional board manager URLs" insert the following link: https://files.pololu.com/arduino/package_pololu_index.json
-3.  Open boards manager. Search for the board "Pololu A-Star Boards". Install it.
-4.  Open bibrary manager. Search for the library "Zumo32U4". Install it.
+2.  Open library manager. Search for the library "Zumo32U4". Install it.
+3.  Open File\Preferences and under "Additional board manager URLs" insert the following link: https://files.pololu.com/arduino/package_pololu_index.json
+4.  Open boards manager. Search for the board "Pololu A-Star Boards". Install it.
 
 You will now be able to use ```#include <Zumo32U4.h>```, which is required to use Zumo32U4Modules.
 
