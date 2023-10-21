@@ -18,14 +18,17 @@ void loop() {
       zumoBot.LEDblink(300);
       zumoBot.getIMUvalue('a');
       Serial.println(*zumoBot.acc[2]);
-      zumoBot.displayPrint((String)*zumoBot.acc[2], true, false);
+      String displayInput = (String)*zumoBot.acc[2]; // Value must be loaded in string buffer to be printed on display
+      zumoBot.displayPrint(displayInput, true, false);
       break;
     }
     case 2: {
       zumoBot.getLineSensorValue();
-      Serial.println((String)zumoBot.lineSensorValues[0] + "\t" + (String)zumoBot.lineSensorValues[1] + "\t" + (String)zumoBot.lineSensorValues[2]);
-      zumoBot.displayPrint("  " + (String)zumoBot.lineSensorValues[0], true, true);
-      zumoBot.displayPrint((String)zumoBot.lineSensorValues[2], false, false);
+      Serial.println((String)zumoBot.lineSensorValues[0] + "\t" + (String)zumoBot.lineSensorValues[1] + "\t" + 
+                     (String)zumoBot.lineSensorValues[2] + "\t" + (String)zumoBot.lineSensorValues[3] + "\t" + 
+                     (String)zumoBot.lineSensorValues[4]);
+      zumoBot.displayPrint("  " + (String)zumoBot.lineSensorValues[2], true, true);
+      zumoBot.displayPrint((String)zumoBot.lineSensorValues[3], false, false);
       zumoBot.displayPrint((String)zumoBot.lineSensorValues[1], false, false);
       zumoBot.LEDblink(300);
       break;

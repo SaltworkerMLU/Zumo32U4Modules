@@ -24,9 +24,11 @@ void loop() {
     }
     case 2: {
       zumoBot.getLineSensorValue();
-      Serial.println((String)zumoBot.lineSensorValues[0] + "\t" + (String)zumoBot.lineSensorValues[1] + "\t" + (String)zumoBot.lineSensorValues[2]);
-      zumoBot.displayPrint("  " + (String)zumoBot.lineSensorValues[0], true, true);
-      zumoBot.displayPrint((String)zumoBot.lineSensorValues[2], false, false);
+      Serial.println((String)zumoBot.lineSensorValues[0] + "\t" + (String)zumoBot.lineSensorValues[1] + "\t" + 
+                     (String)zumoBot.lineSensorValues[2] + "\t" + (String)zumoBot.lineSensorValues[3] + "\t" + 
+                     (String)zumoBot.lineSensorValues[4]);
+      zumoBot.displayPrint("  " + (String)zumoBot.lineSensorValues[2], true, true);
+      zumoBot.displayPrint((String)zumoBot.lineSensorValues[3], false, false);
       zumoBot.displayPrint((String)zumoBot.lineSensorValues[1], false, false);
       zumoBot.LEDblink(300);
       break;

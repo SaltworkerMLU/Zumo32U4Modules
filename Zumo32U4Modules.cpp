@@ -82,16 +82,22 @@ void Zumo32U4ModulesEncoders::getMotorAcceleration() {
   Zumo32U4ModulesEncoders::oldTime[1] = millis(); // Update millis() returns time in milliseconds.
 }
 
-Zumo32U4ModulesLineSensors::Zumo32U4ModulesLineSensors() { Zumo32U4LineSensors::initThreeSensors(); }
+Zumo32U4ModulesLineSensors::Zumo32U4ModulesLineSensors() { Zumo32U4LineSensors::initFiveSensors(); }
 
 void Zumo32U4ModulesLineSensors::getLineSensorValue() { Zumo32U4LineSensors::read(lineSensorValues, QTR_EMITTERS_ON); }
 
+void Zumo32U4ModulesLineSensors::calibrateLineSensors() { Zumo32U4LineSensors::calibrate(QTR_EMITTERS_ON); }
+
+void Zumo32U4ModulesLineSensors::getLineSensorValueCalibrated() { Zumo32U4LineSensors::readCalibrated(lineSensorValues, QTR_EMITTERS_ON); }
+
+//int Zumo32U4ModulesLineSensors::readLineLocation() { Zumo32U4LineSensors::readLine(lineSensorValues, QTR_EMITTERS_ON, false); }
+
 Zumo32U4ModulesProximitySensors::Zumo32U4ModulesProximitySensors() { Zumo32U4ProximitySensors::initThreeSensors(); }
 
-int Zumo32U4ModulesProximitySensors::getProximitySensorValue(bool index) {
+void Zumo32U4ModulesProximitySensors::getProximitySensorValue() {
   Zumo32U4ProximitySensors::read();
-  if (index == true) { return Zumo32U4ProximitySensors::countsFrontWithLeftLeds(); }
-  if (index == false) { return Zumo32U4ProximitySensors::countsFrontWithRightLeds(); }
+  proximitySensorValues[0] = Zumo32U4ProximitySensors::countsFrontWithLeftLeds();
+  proximitySensorValues[1] = Zumo32U4ProximitySensors::countsFrontWithRightLeds();
 }
 
 void Zumo32U4ModulesIMU::initIMU() {
@@ -118,7 +124,7 @@ int16_t Zumo32U4ModulesIMU::getIMUvalue(char m_a_g='_') {
   }
 }
 
-int16_t Zumo32U4ModulesIMU::calibrate(char m_a_g, int index, int iterations=1000) {
+int16_t Zumo32U4ModulesIMU::calibrateIMU(char m_a_g, int index, int iterations=1000) {
   int32_t total = 0; // Sum of read values
   switch(m_a_g) {
     case 'm':
@@ -145,7 +151,7 @@ int16_t Zumo32U4ModulesIMU::calibrate(char m_a_g, int index, int iterations=1000
   return total / iterations; // Average of read values is returned
 }
 
-int32_t Zumo32U4ModulesIMU::dAngle(int index) {
+int32_t Zumo32U4ModulesIMU::gyroAngle(int index) {
   Zumo32U4IMU::readGyro(); // Only gyrometer is needed for Zumo32U4 angle readings
   int16_t turnRate = *gyro[index] - gyroOffset;
   uint16_t m = micros(); // "New time"
@@ -172,16 +178,16 @@ void accelerometerMovement(float v_0, float s_0) {
 }
 */
 
-/*int16_t gyrometerCompas() {
+/*int16_t Zumo32U4ModulesIMU::magCompas() {
 
-  float heading = -1 * (atan2(*zumoBot.mag[0], *zumoBot.mag[1]) * 180) / M_PI;
-  heading += 4.91;
+  float heading = -1 * atan2(*Zumo32U4ModulesIMU::mag[0], *Zumo32U4ModulesIMU::mag[1]) * 180 / M_PI;
+  //heading += 4.91;
   if (heading > 360) { heading = 360; }
   return heading;
-  /*int16_t x = map(*zumoBot.mag[0], -12000, -6000, -400, 400);
-  int16_t y = map(*zumoBot.mag[1], 6000, 12000, -400, 400);
+  int16_t x = map(*Zumo32U4ModulesIMU::mag[0], -12000, -6000, -400, 400);
+  int16_t y = map(*Zumo32U4ModulesIMU::mag[1], 6000, 12000, -400, 400);
 
-  zumoBot.displayPrint((String)x + "\t" + (String)y, true);
+  //zumoBot.displayPrint((String)x + "\t" + (String)y, true);
 
   if (y > 0) {
     return 90 - atan2(x, y) * 180 / PI;
@@ -226,17 +232,57 @@ void Zumo32U4Modules::LEDblink(int interval) {
 }
 
 void Zumo32U4Modules::IMUEndCondition() {
-  if (accDataReady() == false) { // If accelerometer is not initialized:
-    Wire.begin();
-    Zumo32U4IMU::init();          // "Activate" accelerometer a, magnetometer m, gyrometer g på x, y & z-akse
-    Zumo32U4IMU::enableDefault(); // Needed when connected via. USB (don't know why)
-    Serial.println("IMU initialized!");
-  }
   Zumo32U4IMU::readAcc();    // Only accelerometer is needed for readings of Zumo32U4 gravitaional pull
-  if (a.z < 0 || a.z >= 20000) {    // If (Zumo32U4 is turned upside down || lifted up)
+  if (a.z < 0) {    // If (Zumo32U4 is turned upside down)
     Zumo32U4ModulesMotors::setSpeeds(0, 0);   // Motors must stop when program stops
     exit(0); // Stop the program in its entierty
   }
+}
+
+void Zumo32U4Modules::setMotorVelocity(float velocityLeft=0, float velocityRight=0) {
+  Zumo32U4ModulesEncoders::getMotorAcceleration(); // get motor acceleraion also updates motor velocity. 
+  float velocityLeftError = velocityLeft - Zumo32U4ModulesEncoders::motorVelocity[0];
+  float velocityRightError = velocityRight - Zumo32U4ModulesEncoders::motorVelocity[1];
+  leftSpeed += velocityLeftError;
+  rightSpeed += velocityRightError;
+  if (leftSpeed > 400) { leftSpeed = 400; }
+  if (rightSpeed > 400) { rightSpeed = 400; }
+  Zumo32U4ModulesMotors::motorDrive(leftSpeed, rightSpeed);
+}
+
+void Zumo32U4Modules::PIDLineFollower(float kp, float ki, float kd, int speed) {
+  float integral = 0;
+  float error = 0;
+  float lastError = 0;
+
+  Zumo32U4ModulesProximitySensors::getProximitySensorValue(); // Update proximity
+  int proximity = Zumo32U4ModulesProximitySensors::proximitySensorValues[0] + 
+                  Zumo32U4ModulesProximitySensors::proximitySensorValues[1]; // Check if condition met from the get go
+  while (proximity != 12) { // Failsafe 1 in case Zumo32U4 goes haywire
+    Zumo32U4ModulesProximitySensors::getProximitySensorValue(); // Update proximity
+    proximity = Zumo32U4ModulesProximitySensors::proximitySensorValues[0] + 
+                Zumo32U4ModulesProximitySensors::proximitySensorValues[1]; 
+    Zumo32U4ModulesLineSensors::getLineSensorValue();
+    if (lineSensorValues[0] < 300) {  // If left side lineSensor value is low:
+      Zumo32U4Motors::setSpeeds(-60, 200); // Turn left by 90 degrees (roughly speaking)
+      delay(650);
+    }
+    else if (lineSensorValues[4] < 300) { // If right side lineSensor value is low:
+      Zumo32U4Motors::setSpeeds(200, -60); // Turn right by 90 degrees (roughly speaking)
+      delay(650);
+    }
+    error = lineSensorValues[1] - lineSensorValues[3]; // Ideally, the Zumo32U4 will drive in between the (white) line
+    float pFix = error * kp;
+    integral += error;
+    float iFix = integral * ki;
+    int derivative = error - lastError;
+    lastError = error;
+    float dFix = derivative * kd;
+    int correction = pFix + iFix + dFix;
+    Zumo32U4ModulesMotors::motorDrive(speed+correction, speed-correction); // Apply feedback-mechanism to Zumo32U4 motors
+    Zumo32U4Modules::IMUEndCondition(); // Failsafe 2 in case Zumo32U4 goes haywire
+  }
+  Zumo32U4Motors::setSpeeds(0, 0); // Stop Zumo32U4 Motors
 }
 
 Zumo32U4ModulesLCD::Zumo32U4ModulesLCD() {
@@ -265,13 +311,13 @@ void Zumo32U4ModulesLCD::displayMenu() {
 void Zumo32U4ModulesLCD::displayPrint(String input, bool clear=false, bool newLine=true) {
   if (clear==true) {  // Clear display?
     Zumo32U4LCD::clear();
-    Zumo32U4Modules::displayLine = 0;
+    Zumo32U4ModulesLCD::displayLine = 0;
   }
   if (input.length() == 0) { Zumo32U4LCD::print(input[0]); } // If {input} == "\0" or {input} == "", then "\0" is printed to display
   else { Zumo32U4LCD::print(input); }
   if (newLine==true) { // Should the next displayPrint(char input[]) be printed on the next line?
-    Zumo32U4Modules::displayLine++;
-    Zumo32U4LCD::gotoXY(0, Zumo32U4Modules::displayLine);
+    Zumo32U4ModulesLCD::displayLine++;
+    Zumo32U4LCD::gotoXY(0, Zumo32U4ModulesLCD::displayLine);
   }
 }
 
@@ -318,15 +364,15 @@ void Zumo32U4ModulesOLED::displayMenu() {
 void Zumo32U4ModulesOLED::displayPrint(String input, bool clear=false, bool newLine=true) {
   if (clear==true) {  // Clear display?
     Zumo32U4OLED::clear();
-    Zumo32U4Modules::displayLine = 0;
+    Zumo32U4ModulesOLED::displayLine = 0;
   }
 
   if (input.length() == 0) { Zumo32U4OLED::print(input[0]); } // If {input} == "\0" or {input} == "", then "\0" is printed to display
   else { Zumo32U4OLED::print(input); }
 
   if (newLine==true) { // Should the next displayPrint(char input[]) be printed on the next line?
-    Zumo32U4Modules::displayLine++;
-    Zumo32U4OLED::gotoXY(0, Zumo32U4Modules::displayLine);
+    Zumo32U4ModulesOLED::displayLine++;
+    Zumo32U4OLED::gotoXY(0, Zumo32U4ModulesOLED::displayLine);
   }
 }
 

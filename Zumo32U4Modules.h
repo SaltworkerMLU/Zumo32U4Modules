@@ -9,8 +9,8 @@
 
 /*! \brief This class represents the Zumo32U4 buttons A, B & C */
 class Zumo32U4ModulesButtons : protected Zumo32U4ButtonA, 
-                                    protected Zumo32U4ButtonB,
-                                    protected Zumo32U4ButtonC { 
+                               protected Zumo32U4ButtonB,
+                               protected Zumo32U4ButtonC { 
 public: 
 /*! Check button press state.
  *  NONE=0; A=1; B=2; A+B=3; C=4; A+C=5; B+C=6; A+B+C=7; */
@@ -90,13 +90,19 @@ public:
      Class constructor initializes LineSensors from the get go */
 class Zumo32U4ModulesLineSensors : protected Zumo32U4LineSensors {
 public:
-  uint16_t lineSensorValues[3];
+  uint16_t lineSensorValues[5];
 
-  /*! Assume Zumo32U4 has 3 ineSensors */
+  /*! Assume Zumo32U4 has 5 lineSensors */
   Zumo32U4ModulesLineSensors();
 
   /*! Read lineSensor. Afterwards, access these values using lineSensorValues[]. */
   void getLineSensorValue();
+
+  /*! Calibrate lineSensor. Afterwards, the function getLineSensorValueCalibrated() can be executed. */
+  void calibrateLineSensors();
+
+  /*! Calibrate lineSensor. Afterwards, the function getLineSensorValueCalibrated() can be executed. */
+  void getLineSensorValueCalibrated();
 };
 
 #define Zumo32U4ModulesProximitySensors_h
@@ -106,11 +112,13 @@ public:
      Class constructor initializes Protimity Sensors from the get to*/
 class Zumo32U4ModulesProximitySensors : protected Zumo32U4ProximitySensors {
 public:
+  uint8_t proximitySensorValues[2];
+
   /*! Assume Zumo32U4 has 3 Proximity Sensors */
   Zumo32U4ModulesProximitySensors();
 
-  /*! Read proximitySensor. Get right proximitySensor if {index} == false and left if {index} == true */
-  int getProximitySensorValue(bool index);
+  /*! Read proximitySensor. Proximity Sensor values are stored in uint8_t proximitySensorValues[2] */
+  void getProximitySensorValue();
 };
 
 #define Zumo32U4ModulesIMU_h
@@ -140,10 +148,11 @@ public:
   int16_t getIMUvalue(char m_a_g='_');
 
   /*! Needed to get actual angle of Zumo32U4 in setup(). */
-  int16_t calibrate(char m_a_g, int index, int iterations=1000); // EXPERIMENTAL
+  int16_t calibrateIMU(char m_a_g, int index, int iterations=1000);
 
-  /*! After calibrate(char m_a_g, int index, int iterations) has been executed, get actual angle using gyrometer */
-  int32_t dAngle(int index); // EXPERIMENTAL
+  /*! After calibrate(char m_a_g, int index, int iterations) has been executed, get actual angle using gyrometer. 
+   *  Make sure to run this function in a loop without any forced delays like delay() as this will cause errors in angle calculations */
+  int32_t gyroAngle(int index);
 };
 
 #define Zumo32U4Modules_h
@@ -159,7 +168,7 @@ class Zumo32U4Modules : public Zumo32U4ModulesButtons,
                         public Zumo32U4ModulesProximitySensors,
                         public Zumo32U4ModulesIMU {
 public:
-  int displayLine = 0; // Exclusively used for class Zumo32U4ModulesLCD & class Zumo32U4ModulesOLED
+  int leftSpeed=0, rightSpeed=0; // Used for the function setMotorvelocity(float velocityLeft=0, float velocityRight=0)
 
   /*! Wait until either A, B or C has been pressed and released.
    Afterwards, {windup} ms of a "fancy delay" follows.
@@ -174,6 +183,12 @@ public:
 
   /*! End the program if either Zumo is lifted up or turned upside down */
   void IMUEndCondition();
+
+  /*! Make the motors drive at a specific velocity. Makes for a smooth acceleration.
+   * Velocity should be set between 0cm/s (motor stop) and 65cm/s (motor full speed) */
+  void setMotorVelocity(float velocityLeft=0, float velocityRight=0);
+
+  void PIDLineFollower(float P, float I, float D, int speed);
 };
 
 #define Zumo32U4ModulesLCD_h
@@ -183,6 +198,8 @@ public:
  * The LCD-display is limited to 8x2 dimensions, meaning only 16 signs can be displayed once at a time. */
 class Zumo32U4ModulesLCD : public Zumo32U4Modules, protected Zumo32U4LCD {
 public:
+  int displayLine = 0; // Set specific display line if we're feeling fancy
+
   /*! Equivalent to a "Hello World!" displayed on the LCD. */
   Zumo32U4ModulesLCD();
 
@@ -207,6 +224,8 @@ public:
  * Furthermore, the OLED-display is capable of making vfx graphics [WORK IN PROGRESS] */
 class Zumo32U4ModulesOLED : public Zumo32U4Modules, protected Zumo32U4OLED {
 public:
+  int displayLine = 0; // Set specific display line if we're feeling fancy
+
   /*! Equivalent to a "Hello World!" displayed on the LCD. */
   Zumo32U4ModulesOLED();
 
@@ -223,28 +242,13 @@ public:
                                char custom5[]={}, char custom6[]={}, char custom7[]={}, char custom8[]={});
 };
 
-// This character is a back arrow pointing to the left.
-const char backArrow[] PROGMEM = {0, 2, 1, 5, 9, 30, 8, 4};
-
-// This character is a back arrow pointing to the right.
-const char backArrowReverse[] PROGMEM = {0, 8, 16, 20, 18, 15, 2, 4};
-
-// This character is two chevrons pointing up.
-const char forwardArrows[] PROGMEM = {0, 4, 10, 17, 4, 10, 17, 0};
-
-// This character is two chevrons pointing down.
-const char reverseArrows[] PROGMEM = {0, 17, 10, 4, 17, 10, 4, 0};
-
-// This character is two solid arrows pointing up.
-const char forwardArrowsSolid[] PROGMEM = {0, 4, 14, 31, 4, 14, 31, 0};
-
-// This character is two solid arrows pointing down.
-const char reverseArrowsSolid[] PROGMEM = {0, 31, 14, 4, 31, 14, 4, 0};
-
-// This character is a solid arrow pointing to the right.
-const char rightArrow[] PROGMEM = {8, 12, 14, 15, 14, 12, 8, 0};
-
-// This character is a solid arrow pointing to the left.
-const char leftArrow[] PROGMEM = {2, 6, 14, 30, 14, 6, 2, 0};
+const char backArrow[] PROGMEM = {0, 2, 1, 5, 9, 30, 8, 4}; // This character is a back arrow pointing to the left.
+const char backArrowReverse[] PROGMEM = {0, 8, 16, 20, 18, 15, 2, 4}; // This character is a back arrow pointing to the right.
+const char forwardArrows[] PROGMEM = {0, 4, 10, 17, 4, 10, 17, 0}; // This character is two chevrons pointing up.
+const char reverseArrows[] PROGMEM = {0, 17, 10, 4, 17, 10, 4, 0}; // This character is two chevrons pointing down.
+const char forwardArrowsSolid[] PROGMEM = {0, 4, 14, 31, 4, 14, 31, 0}; // This character is two solid arrows pointing up.
+const char reverseArrowsSolid[] PROGMEM = {0, 31, 14, 4, 31, 14, 4, 0}; // This character is two solid arrows pointing down.
+const char rightArrow[] PROGMEM = {8, 12, 14, 15, 14, 12, 8, 0}; // This character is a solid arrow pointing to the right.
+const char leftArrow[] PROGMEM = {2, 6, 14, 30, 14, 6, 2, 0}; // This character is a solid arrow pointing to the left.
 
 #endif // This line always comes last in a header file
