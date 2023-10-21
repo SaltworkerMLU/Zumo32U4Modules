@@ -188,6 +188,9 @@ public:
    * Velocity should be set between 0cm/s (motor stop) and 65cm/s (motor full speed) */
   void setMotorVelocity(float velocityLeft=0, float velocityRight=0);
 
+  /*! Use a PID-controller, using line follower sensors as input and motors as output, to control Zumo32U4 movement.
+   *  The PID-controller runs on a loop. To exit this loop, make both proximity sensors get max value. Sticking your foot in front of it should to the trick.
+   *  Furthermore, a failsafe option is provived: IMUEndCondition(). */
   void PIDLineFollower(float P, float I, float D, int speed);
 };
 
