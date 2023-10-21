@@ -1,7 +1,9 @@
 # WORK IN PROGRESS
 * Make use of OLED display graphics functionality (Currently limited to text)
-* Add more sophisticated functions
-* Additional changes/simplifications to library may occur
+* Add other sophisticated functions
+   - IDEA: Add magnetometer-based compass function
+   - IDEA: Add accelerometer-based movement
+* Additional changes to library may occur
 
 # Table of contents
 + [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
@@ -13,7 +15,7 @@
 # Zumo32U4Modules
 Simplify the programming process of your comming Zumo32U4 project. Just import this library, create the nessecary object(s), and you're good to go to use the components in accordance to constructed object(s).
 
-![image](Zumo32U4Modules_Media/Zumo32U4Modules.jpg)
+![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.jpg)
 
 NOTE: These 8 custom characters come preloaded with Zumo32U4Modules.h
 * forwardArrows
@@ -25,7 +27,7 @@ NOTE: These 8 custom characters come preloaded with Zumo32U4Modules.h
 * backArrow
 * backArrowReverse
 
-They are explicitly used in the constructors Zumo32U4ModulesLCD & Zumo32U4ModulesOLED with the function:
+They are used in the constructors Zumo32U4ModulesLCD & Zumo32U4ModulesOLED with the function:
 
 ```
   displayCustomCharacters(forwardArrows, forwardArrowsSolid, reverseArrows, reverseArrowsSolid,
@@ -50,8 +52,8 @@ Here is "Zumo32U4Modules.h" with almost no comments to shorten it.
 #include <Zumo32U4.h> // Access Zumo32U4.h library here: https://pololu.github.io/zumo-32u4-arduino-library/
 
 class Zumo32U4ModulesButtons : protected Zumo32U4ButtonA, 
-                                    protected Zumo32U4ButtonB,
-                                    protected Zumo32U4ButtonC { 
+                               protected Zumo32U4ButtonB,
+                               protected Zumo32U4ButtonC { 
 public: 
   int checkButtonPress();
   int getButtonRelease();
@@ -67,6 +69,7 @@ class Zumo32U4ModulesMotors : protected Zumo32U4Motors {
 public: 
   void motorDrive(int left=0, int right=0, bool reverse=false); 
 };
+
 class Zumo32U4ModulesEncoders : protected Zumo32U4Encoders { 
 private:
   long oldTime[2]; // Old time for both encoders
@@ -84,16 +87,20 @@ public:
 
 class Zumo32U4ModulesLineSensors : protected Zumo32U4LineSensors {
 public:
-  uint16_t lineSensorValues[3];
+  uint16_t lineSensorValues[5];
 
   Zumo32U4ModulesLineSensors();
   void getLineSensorValue();
+  void calibrateLineSensors();
+  void getLineSensorValueCalibrated();
 };
 
 class Zumo32U4ModulesProximitySensors : protected Zumo32U4ProximitySensors {
 public:
+  uint8_t proximitySensorValues[2];
+
   Zumo32U4ModulesProximitySensors();
-  int getProximitySensorValue(bool index);
+  void getProximitySensorValue();
 };
 
 class Zumo32U4ModulesIMU : protected Zumo32U4IMU {
@@ -106,9 +113,10 @@ public:
   uint32_t turnAngle = 0; // Current calibrated angle of Zumo32U4
 
   void initIMU();
+
   int16_t getIMUvalue(char m_a_g='_');
-  int16_t calibrate(char m_a_g, int index, int iterations=1000); // EXPERIMENTAL
-  int32_t dAngle(int index); // EXPERIMENTAL
+  int16_t calibrateIMU(char m_a_g, int index, int iterations=1000);
+  int32_t gyroAngle(int index);
 };
 
 class Zumo32U4Modules : public Zumo32U4ModulesButtons, 
@@ -119,15 +127,19 @@ class Zumo32U4Modules : public Zumo32U4ModulesButtons,
                         public Zumo32U4ModulesProximitySensors,
                         public Zumo32U4ModulesIMU {
 public:
-  int displayLine = 0; // Exclusively used for class Zumo32U4ModulesLCD & class Zumo32U4ModulesOLED
+  int leftSpeed=0, rightSpeed=0; // Used for the function setMotorvelocity(float velocityLeft=0, float velocityRight=0)
 
   int buttonBootupSound(int windup=800, int attention=10); 
   void LEDblink(int interval); 
   void IMUEndCondition();
+  void setMotorVelocity(float velocityLeft=0, float velocityRight=0);
+  void PIDLineFollower(float P, float I, float D, int speed);
 };
 
 class Zumo32U4ModulesLCD : public Zumo32U4Modules, protected Zumo32U4LCD {
 public:
+  int displayLine = 0; // Set specific display line if we're feeling fancy
+
   Zumo32U4ModulesLCD();
   void displayMenu();
   void displayPrint(String input, bool clear=false, bool newLine=true); // Example: LCDprint("Hello World!");
@@ -137,6 +149,8 @@ public:
 
 class Zumo32U4ModulesOLED : public Zumo32U4Modules, protected Zumo32U4OLED {
 public:
+  int displayLine = 0; // Set specific display line if we're feeling fancy
+
   Zumo32U4ModulesOLED();
   void displayMenu();
   void displayPrint(String input, bool clear=false, bool newLine=true); // Eksempel: OLEDprint("Hello World!");
@@ -144,18 +158,18 @@ public:
                                char custom5[]={}, char custom6[]={}, char custom7[]={}, char custom8[]={});
 };
 
-const char backArrow[] PROGMEM = {0, 2, 1, 5, 9, 30, 8, 4};
-const char backArrowReverse[] PROGMEM = {0, 8, 16, 20, 18, 15, 2, 4};
-const char forwardArrows[] PROGMEM = {0, 4, 10, 17, 4, 10, 17, 0};
-const char reverseArrows[] PROGMEM = {0, 17, 10, 4, 17, 10, 4, 0};
-const char forwardArrowsSolid[] PROGMEM = {0, 4, 14, 31, 4, 14, 31, 0};
-const char reverseArrowsSolid[] PROGMEM = {0, 31, 14, 4, 31, 14, 4, 0};
-const char rightArrow[] PROGMEM = {8, 12, 14, 15, 14, 12, 8, 0};
-const char leftArrow[] PROGMEM = {2, 6, 14, 30, 14, 6, 2, 0};
+const char backArrow[] PROGMEM = {0, 2, 1, 5, 9, 30, 8, 4}; // This character is a back arrow pointing to the left.
+const char backArrowReverse[] PROGMEM = {0, 8, 16, 20, 18, 15, 2, 4}; // This character is a back arrow pointing to the right.
+const char forwardArrows[] PROGMEM = {0, 4, 10, 17, 4, 10, 17, 0}; // This character is two chevrons pointing up.
+const char reverseArrows[] PROGMEM = {0, 17, 10, 4, 17, 10, 4, 0}; // This character is two chevrons pointing down.
+const char forwardArrowsSolid[] PROGMEM = {0, 4, 14, 31, 4, 14, 31, 0}; // This character is two solid arrows pointing up.
+const char reverseArrowsSolid[] PROGMEM = {0, 31, 14, 4, 31, 14, 4, 0}; // This character is two solid arrows pointing down.
+const char rightArrow[] PROGMEM = {8, 12, 14, 15, 14, 12, 8, 0}; // This character is a solid arrow pointing to the right.
+const char leftArrow[] PROGMEM = {2, 6, 14, 30, 14, 6, 2, 0}; // This character is a solid arrow pointing to the left.
 
 #endif // This line always comes last in a header file
 ```
-("Zumo32U4Modules.h" last updated: 19. October 2023)
+("Zumo32U4Modules.h" last updated: 21. October 2023)
 
 # Get Started
 1.  Open Arduino IDE.
