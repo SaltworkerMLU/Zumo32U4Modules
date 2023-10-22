@@ -4,6 +4,7 @@
    - IDEA: Add magnetometer-based compass function
    - IDEA: Add accelerometer-based movement
 * Additional changes to library may occur
+   - IDEA: Make initIMU() be executed as a class constructor (NOTE: More complicated than it seems. Zumo32U4.h source code manipulation [supposedly] needed to prevent USE enumeration failure [a bad thing])
 
 # Table of contents
 + [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
@@ -15,7 +16,7 @@
 # Zumo32U4Modules
 Simplify the programming process of your comming Zumo32U4 project. Just import this library, create the nessecary object(s), and you're good to go to use the components in accordance to constructed object(s).
 
-![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.jpg)
+![image](Zumo32U4Modules_Media/Zumo32U4Modules.jpg)
 
 NOTE: These 8 custom characters come preloaded with Zumo32U4Modules.h
 * forwardArrows
@@ -55,9 +56,11 @@ class Zumo32U4ModulesButtons : protected Zumo32U4ButtonA,
                                protected Zumo32U4ButtonB,
                                protected Zumo32U4ButtonC { 
 public: 
+  char buttonRelease;
+
   int checkButtonPress();
-  int getButtonRelease();
-  int buttonBootup(int windup=800); 
+  char getButtonRelease();
+  void buttonBootup(int windup=800); 
 };
 
 class Zumo32U4ModulesBuzzer : public Zumo32U4Buzzer { // Imports Zumo32U4Buzzer for direct use in .ino file
@@ -67,7 +70,10 @@ public:
 
 class Zumo32U4ModulesMotors : protected Zumo32U4Motors { 
 public: 
-  void motorDrive(int left=0, int right=0, bool reverse=false); 
+  bool reverse=false;
+
+  void motorDrive();
+  void motorDrive(int left, int right); 
 };
 
 class Zumo32U4ModulesEncoders : protected Zumo32U4Encoders { 
@@ -113,7 +119,6 @@ public:
   uint32_t turnAngle = 0; // Current calibrated angle of Zumo32U4
 
   void initIMU();
-
   int16_t getIMUvalue(char m_a_g='_');
   int16_t calibrateIMU(char m_a_g, int index, int iterations=1000);
   int32_t gyroAngle(int index);
@@ -127,13 +132,12 @@ class Zumo32U4Modules : public Zumo32U4ModulesButtons,
                         public Zumo32U4ModulesProximitySensors,
                         public Zumo32U4ModulesIMU {
 public:
-  int leftSpeed=0, rightSpeed=0; // Used for the function setMotorvelocity(float velocityLeft=0, float velocityRight=0)
+  uint8_t leftSpeed=0, rightSpeed=0; // Used for the function setMotorvelocity(float velocityLeft=0, float velocityRight=0)
 
-  int buttonBootupSound(int windup=800, int attention=10); 
-  void LEDblink(int interval); 
+  void buttonBootupSound(int windup=800, int attention=10); 
   void IMUEndCondition();
   void setMotorVelocity(float velocityLeft=0, float velocityRight=0);
-  void PIDLineFollower(float P, float I, float D, int speed);
+  void PIDLineFollower(float P, float I, float D, int speed, bool dir, bool blackLine=false);
 };
 
 class Zumo32U4ModulesLCD : public Zumo32U4Modules, protected Zumo32U4LCD {
@@ -169,7 +173,7 @@ const char leftArrow[] PROGMEM = {2, 6, 14, 30, 14, 6, 2, 0}; // This character 
 
 #endif // This line always comes last in a header file
 ```
-("Zumo32U4Modules.h" last updated: 21. October 2023)
+("Zumo32U4Modules.h" last updated: 22. October 2023)
 
 # Get Started
 1.  Open Arduino IDE.
