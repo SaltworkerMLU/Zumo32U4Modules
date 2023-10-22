@@ -8,7 +8,6 @@
 Zumo32U4ModulesMotors zumoBot;
 
 int left, right;
-bool reverse = true;
 
 void setup() {
   // put your setup code here, to run once:
@@ -18,12 +17,12 @@ void loop() {
   // put your main code here, to run repeatedly:
   left = random(-400, 401); // The motors take input(s) from -400 to 400
   right = random(-400, 401);
-  reverse = !reverse;
-  zumoBot.motorDrive(left, right, reverse);
+  zumoBot.reverse = !zumoBot.reverse;
+  zumoBot.motorDrive(left, right);
   Serial.println((String)left + "\t" + (String)right);
   delay(1000);
-  reverse = !reverse;
-  zumoBot.motorDrive(left, right, reverse);
+  zumoBot.reverse = !zumoBot.reverse;
+  zumoBot.motorDrive(left, right);
   Serial.println((String)-left + "\t" + (String)-right);
   delay(1000);
 }

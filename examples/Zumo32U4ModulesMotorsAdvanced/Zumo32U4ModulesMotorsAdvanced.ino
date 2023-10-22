@@ -9,7 +9,6 @@
 #include <Zumo32U4Modules.h>
 Zumo32U4ModulesLCD zumoBot;
 
-int protocol;
 int32_t angle;
 
 void setup() {
@@ -19,12 +18,12 @@ void setup() {
   zumoBot.calibrateLineSensors();
   zumoBot.initIMU();
   zumoBot.gyroOffset = zumoBot.calibrateIMU('g', 2, 1000);
-  protocol = zumoBot.buttonBootupSound();
+  zumoBot.buttonBootupSound();
   zumoBot.displayPrint("", true, false); // Simply clear display
 }
 
 void loop() {
-  switch(protocol) {
+  switch(zumoBot.buttonRelease) {
     case 1:
       zumoBot.PIDLineFollower(1, 0, 0, 200); // Runs in a loop. If Zumo32U4 is turned upside down, the program ends due to IMUEndCondition().
       zumoBot.getLineSensorValueCalibrated(); // Whilst PIDLineFollower() is not running, both proximity sensors read max value, print line sensor values calibrated...

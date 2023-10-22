@@ -6,17 +6,16 @@ int Zumo32U4ModulesButtons::checkButtonPress() {
          Zumo32U4ButtonC::isPressed() * 4;
 }
 
-int Zumo32U4ModulesButtons::getButtonRelease() {
+char Zumo32U4ModulesButtons::getButtonRelease() {
   while (1) { // No buttons have been pressed and released yet.
-      if (Zumo32U4ButtonA::getSingleDebouncedRelease() == true) { return 1; }
-      else if (Zumo32U4ButtonB::getSingleDebouncedRelease() == true) { return 2; }
-      else if (Zumo32U4ButtonC::getSingleDebouncedRelease() == true) { return 3; }
+      if (Zumo32U4ButtonA::getSingleDebouncedRelease() == true) { return 'A'; }
+      else if (Zumo32U4ButtonB::getSingleDebouncedRelease() == true) { return 'B'; }
+      else if (Zumo32U4ButtonC::getSingleDebouncedRelease() == true) { return 'C'; }
     }
 }
 
-int Zumo32U4ModulesButtons::buttonBootup(int windup=800) {
-  int buttonPress = 0;
-  buttonPress = getButtonRelease();
+void Zumo32U4ModulesButtons::buttonBootup(int windup=800) {
+  Zumo32U4ModulesButtons::buttonRelease = getButtonRelease();
   ledRed(1);    // Turn on red LED
   delay(windup/2);                                // Prevent the prior function from being overwritten
   ledYellow(1); // Turn on yellow LED
@@ -25,19 +24,24 @@ int Zumo32U4ModulesButtons::buttonBootup(int windup=800) {
   ledYellow(0); // Turn off yellow LED
   ledGreen(1);  // Turn on green LED. No need to turn it off. Green LED lights up when Serial monitor active
   delayMicroseconds(1); // Frekvens spilles i {windup}. efter 1us eksekveres næste linje i programmet
-  return buttonPress;
 }
 
 void Zumo32U4ModulesBuzzer::buzzer(int frequency=400, int duration=50, int volume=10) {
   Zumo32U4Buzzer::playFrequency(frequency, duration, volume); 
 }
 
-void Zumo32U4ModulesMotors::motorDrive(int left=0, int right=0, bool reverse=false) {
-  Zumo32U4ModulesMotors::flipRightMotor(reverse); // IF reverse == true: {right} is reversed
-  Zumo32U4ModulesMotors::flipLeftMotor(reverse); // IF reverse == true: {left} is reversed
-  if (left==0 && right!=0) { Zumo32U4ModulesMotors::setRightSpeed(right); }
-  else if (left!=0 && right==0) { Zumo32U4ModulesMotors::setLeftSpeed(left); }
-  else { Zumo32U4ModulesMotors::setSpeeds(left, right); } // Executes setLeftSpeed(int) & setRightSpeed(int) one after another
+void Zumo32U4ModulesMotors::motorDrive() {
+  OCR1B = 0; // Set left motor speed to 0
+  OCR1A = 0; // Set right motor speed to 0
+  FastGPIO::Pin<16>::setOutput(0); // Update left motor speed (left motor pin=16)
+  FastGPIO::Pin<15>::setOutput(0); // Update right motor speed (left motor pin=15)
+}
+
+void Zumo32U4ModulesMotors::motorDrive(int left, int right) {
+  Zumo32U4ModulesMotors::flipLeftMotor(Zumo32U4ModulesMotors::reverse); // Update left motor direction
+  Zumo32U4ModulesMotors::flipRightMotor(Zumo32U4ModulesMotors::reverse); // Update right motor direction
+  Zumo32U4ModulesMotors::setRightSpeed(right); // Alternatively, run Zumo32U4ModulesMotors::setSpeeds(left, right);
+  Zumo32U4ModulesMotors::setLeftSpeed(left); // This function executes setLeftSpeed(int) & setRightSpeed(int) one after another
 }
 
 float Zumo32U4ModulesEncoders::motorDistance(bool index) {
@@ -202,9 +206,8 @@ void accelerometerMovement(float v_0, float s_0) {
   //x = {-9400; -6600}
 }*/
 
-int Zumo32U4Modules::buttonBootupSound(int windup=800, int attention=10) {
-  int buttonPress = 0;
-  buttonPress = getButtonRelease();
+void Zumo32U4Modules::buttonBootupSound(int windup=800, int attention=10) {
+  Zumo32U4ModulesButtons::buttonRelease = getButtonRelease();
   ledRed(1);    // Turn on red LED
   Zumo32U4Buzzer::playFrequency(400, windup/2, attention); // 400Hz sound, ms/2, 15=max volume & 0 = min volume
   delay(windup/2);                                // Prevent the prior function from being overwritten
@@ -216,25 +219,12 @@ int Zumo32U4Modules::buttonBootupSound(int windup=800, int attention=10) {
   ledGreen(1);  // Turn on green LED. No need to turn it off. Green LED lights up when Serial monitor active
   Zumo32U4Buzzer::playFrequency(1200, windup, attention);  // 1200Hz lyd
   delayMicroseconds(1); // Frekvens spilles i {windup}. efter 1us eksekveres næste linje i programmet
-  return buttonPress;
-}
-
-void Zumo32U4Modules::LEDblink(int interval) {
-  ledRed(1);    // Turn on red LED
-  delay(interval/3);
-  ledRed(0);    // Turn off red LED
-  ledYellow(1); // Turn on yellow LED
-  delay(interval/3);
-  ledYellow(0); // Turn off yellow LED
-  ledGreen(1);  // Turn on green LED
-  delay(interval/3);
-  ledGreen(0);  // Turn off green LED
 }
 
 void Zumo32U4Modules::IMUEndCondition() {
   Zumo32U4IMU::readAcc();    // Only accelerometer is needed for readings of Zumo32U4 gravitaional pull
   if (a.z < 0) {    // If (Zumo32U4 is turned upside down)
-    Zumo32U4ModulesMotors::setSpeeds(0, 0);   // Motors must stop when program stops
+    Zumo32U4ModulesMotors::motorDrive(); // Stop motors
     exit(0); // Stop the program in its entierty
   }
 }
@@ -250,39 +240,47 @@ void Zumo32U4Modules::setMotorVelocity(float velocityLeft=0, float velocityRight
   Zumo32U4ModulesMotors::motorDrive(leftSpeed, rightSpeed);
 }
 
-void Zumo32U4Modules::PIDLineFollower(float kp, float ki, float kd, int speed) {
-  float integral = 0;
-  float error = 0;
-  float lastError = 0;
+void Zumo32U4Modules::PIDLineFollower(float kp, float ki, float kd, int speed, bool dir, bool blackLine=false) {
+  int integral = 0;
+  int error = 0;
+  int lastError = 0;
 
   Zumo32U4ModulesProximitySensors::getProximitySensorValue(); // Update proximity
   int proximity = Zumo32U4ModulesProximitySensors::proximitySensorValues[0] + 
                   Zumo32U4ModulesProximitySensors::proximitySensorValues[1]; // Check if condition met from the get go
-  while (proximity != 12) { // Failsafe 1 in case Zumo32U4 goes haywire
+  while (proximity != 12) { // Run PID-controller while both proximity sensors both do not read max value
     Zumo32U4ModulesProximitySensors::getProximitySensorValue(); // Update proximity
     proximity = Zumo32U4ModulesProximitySensors::proximitySensorValues[0] + 
                 Zumo32U4ModulesProximitySensors::proximitySensorValues[1]; 
     Zumo32U4ModulesLineSensors::getLineSensorValue();
-    if (lineSensorValues[0] < 300) {  // If left side lineSensor value is low:
-      Zumo32U4Motors::setSpeeds(-60, 200); // Turn left by 90 degrees (roughly speaking)
+    /*if (lineSensorValues[0] < threshold) {  // If left side lineSensor value is low:
+      Zumo32U4ModulesMotors::setSpeeds(-80, 200); // Turn left by 90 degrees (roughly speaking)
       delay(650);
     }
     else if (lineSensorValues[4] < 300) { // If right side lineSensor value is low:
-      Zumo32U4Motors::setSpeeds(200, -60); // Turn right by 90 degrees (roughly speaking)
+      Zumo32U4ModulesMotors::setSpeeds(200, -80); // Turn right by 90 degrees (roughly speaking)
       delay(650);
-    }
-    error = lineSensorValues[1] - lineSensorValues[3]; // Ideally, the Zumo32U4 will drive in between the (white) line
-    float pFix = error * kp;
+    }*/
+    /*if (lineSensorValues[2] > 250 && lineSensorValues[1] > 300 && lineSensorValues[3] > 300) { // If mid lineSensor is not in white
+      Zumo32U4Motors::setSpeeds(-200, 200); // Turn left by 180 degrees (roughly speaking)
+      delay(650);
+    }*/
+    if (dir==true && blackLine==true) { error = lineSensorValues[0] + lineSensorValues[1] - lineSensorValues[2] - lineSensorValues[3]; }
+    else if (dir==false && blackLine==true) { error = lineSensorValues[1] + lineSensorValues[2] - lineSensorValues[3] - lineSensorValues[4]; }
+    else if (dir==true && blackLine==false) { error = lineSensorValues[3] - lineSensorValues[1]; } // lineSensorValues[4] +  - lineSensorValues[2] 
+    else if (dir==false && blackLine==false) { error = lineSensorValues[3] - lineSensorValues[1] ; } //   + lineSensorValues[2]  - lineSensorValues[0]
+     // Ideally, the Zumo32U4 will drive in between the (white) line // lineSensorValues[0]*1.15+ -lineSensorValues[4] //1.2, 0, 0.8, 200 || 0.9, 0, 0.15, 100
+    int pFix = error * kp;
     integral += error;
-    float iFix = integral * ki;
+    int iFix = integral * ki;
     int derivative = error - lastError;
     lastError = error;
-    float dFix = derivative * kd;
+    int dFix = derivative * kd;
     int correction = pFix + iFix + dFix;
-    Zumo32U4ModulesMotors::motorDrive(speed+correction, speed-correction); // Apply feedback-mechanism to Zumo32U4 motors
-    Zumo32U4Modules::IMUEndCondition(); // Failsafe 2 in case Zumo32U4 goes haywire
+    Zumo32U4ModulesMotors::motorDrive(speed-correction, speed+correction); // Apply feedback-mechanism to Zumo32U4 motors
+    Zumo32U4Modules::IMUEndCondition(); // Failsafe in case Zumo32U4 goes haywire
   }
-  Zumo32U4Motors::setSpeeds(0, 0); // Stop Zumo32U4 Motors
+  Zumo32U4ModulesMotors::motorDrive(); // Stop Zumo32U4 Motors
 }
 
 Zumo32U4ModulesLCD::Zumo32U4ModulesLCD() {

@@ -12,26 +12,23 @@
 Zumo32U4ModulesButtons buttons;
 Zumo32U4ModulesBuzzer buzzer;
 
-int protocol;
-
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  protocol = buttons.buttonBootup();
+  buttons.buttonBootup();
 }
+
 void loop() {
   // put your main code here, to run repeatedly:
-  switch(protocol) {
-    case 1: { // Print combination of buttonPresses
+  switch(zumoBot.buttonRelease) {
+    case 1: // Print combination of buttonPresses
       Serial.println(buttons.checkButtonPress());
       delay(50);
       break;
-    }
-    case 2: { // Print button as number when released
+    case 2: // Print button as number when released
       Serial.println(buttons.getButtonRelease());
       break;
-    }
-    case 3: {
+    case 3:
         switch (buttons.checkButtonPress()) {
           case 0:
             break;
@@ -59,6 +56,5 @@ void loop() {
           }
           delayMicroseconds(1);
           break;
-    }
   }
 }

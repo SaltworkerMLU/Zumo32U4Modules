@@ -1,20 +1,18 @@
 #include <Zumo32U4Modules.h>
 Zumo32U4ModulesLCD zumoBot;
 
-int protocol;
-bool bakgear = true;
-
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   zumoBot.initIMU();
   zumoBot.displayMenu();
-  protocol = zumoBot.buttonBootup();
+  zumoBot.buttonBootup();
 }
+
 void loop() {
   // put your main code here, to run repeatedly:
-  switch(protocol) {
-    case 1: {
+  switch(zumoBot.buttonRelease) {
+    case 'A': {
       zumoBot.LEDblink(300);
       zumoBot.getIMUvalue('a');
       Serial.println(*zumoBot.acc[2]);
@@ -22,7 +20,7 @@ void loop() {
       zumoBot.displayPrint(displayInput, true, false);
       break;
     }
-    case 2: {
+    case 'B': {
       zumoBot.getLineSensorValue();
       Serial.println((String)zumoBot.lineSensorValues[0] + "\t" + (String)zumoBot.lineSensorValues[1] + "\t" + 
                      (String)zumoBot.lineSensorValues[2] + "\t" + (String)zumoBot.lineSensorValues[3] + "\t" + 
@@ -33,13 +31,13 @@ void loop() {
       zumoBot.LEDblink(300);
       break;
     }
-    case 3: {
+    case 'C': {
       if (abs(zumoBot.motorDistance(0)) > 10)  {Serial.println(zumoBot.motorDistanceReset(0)); }
       if (abs(zumoBot.motorDistance(1)) > 10)  {Serial.println(zumoBot.motorDistanceReset(1)); }
-      zumoBot.motorDrive(200, 0, bakgear);
+      zumoBot.motorDrive(200, 0);
       zumoBot.LEDblink(500);
-      bakgear = !bakgear;
-      zumoBot.motorDrive(200, 0, bakgear);
+      zumoBot.reverse = !zumoBot.reverse;
+      zumoBot.motorDrive(200, 0);
       zumoBot.IMUEndCondition();
       Serial.println(*zumoBot.acc[2]);
       Serial.println((String)zumoBot.motorDistance(0) + "\t" + (String)zumoBot.motorDistance(1));

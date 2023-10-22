@@ -12,20 +12,24 @@ class Zumo32U4ModulesButtons : protected Zumo32U4ButtonA,
                                protected Zumo32U4ButtonB,
                                protected Zumo32U4ButtonC { 
 public: 
+  /*! Set a program protocol depending on button release (or button press if we're feeling fancy).
+   *  This variable is automatically updated when buttonBootup() or buttonBootupSound() is executed.
+   *  One use case is to seperate 1 program into 3 protocols using switch-cases. Use your creativity. */
+  char buttonRelease;
+
 /*! Check button press state.
  *  NONE=0; A=1; B=2; A+B=3; C=4; A+C=5; B+C=6; A+B+C=7; */
   int checkButtonPress();
 
 /*! Wait until either A, B or C has been pressed and released.
-    A returns 1; B returns 2; C returns 3 */
-  int getButtonRelease();
+    Return the specific character of the button pressed and released. */
+  char getButtonRelease();
 
 /*! Wait until either A, B or C has been pressed and released.
    Afterwards, {windup} ms of a "fancy delay" follows.
    This "fancy delay" consists of the LEDs lighting like a traffic light.
-   Furthermore: You can set a program protocol depending on button press&release! 
-   Again, A returns 1; B returns 2; C returns 3*/
-  int buttonBootup(int windup=800); 
+   Furthermore: Class variable buttonRelease is updated since getButtonRelease() is used. */
+  void buttonBootup(int windup=800); 
 };
 
 #define Zumo32U4ModulesBuzzer_h
@@ -44,8 +48,13 @@ public:
 /*! \brief This class represents the 2 Zumo32U4 motors. */
 class Zumo32U4ModulesMotors : protected Zumo32U4Motors { 
 public: 
+  bool reverse=false;
+
+  /*! Simply stops both Zumo32U4 motors more byte-efficiently than other functions. */
+  void motorDrive();
+
   /*! Drive between -400 and 400 with {left} and {right}. If {reverse} is true, motor speeds are reversed */
-  void motorDrive(int left=0, int right=0, bool reverse=false); 
+  void motorDrive(int left, int right); 
 };
 
 #define Zumo32U4ModulesEncoders_h
@@ -168,18 +177,14 @@ class Zumo32U4Modules : public Zumo32U4ModulesButtons,
                         public Zumo32U4ModulesProximitySensors,
                         public Zumo32U4ModulesIMU {
 public:
-  int leftSpeed=0, rightSpeed=0; // Used for the function setMotorvelocity(float velocityLeft=0, float velocityRight=0)
+  uint8_t leftSpeed=0, rightSpeed=0; // Used for the function setMotorvelocity(float velocityLeft=0, float velocityRight=0)
 
   /*! Wait until either A, B or C has been pressed and released.
    Afterwards, {windup} ms of a "fancy delay" follows.
    This "fancy delay" consists of the LEDs lighting like a traffic light and the buzzer speaking accordingly.
    Furthermore: You can set a program protocol depending on button press&release! 
    Again, A returns 1; B returns 2; C returns 3*/
-  int buttonBootupSound(int windup=800, int attention=10); 
-  
-  /*! Blink with the 3 LEDs in intervals of {interval}.
-   *  Consider this function a fancy equivalent to delay() */
-  void LEDblink(int interval); 
+  void buttonBootupSound(int windup=800, int attention=10); 
 
   /*! End the program if either Zumo is lifted up or turned upside down */
   void IMUEndCondition();
@@ -191,7 +196,7 @@ public:
   /*! Use a PID-controller, using line follower sensors as input and motors as output, to control Zumo32U4 movement.
    *  The PID-controller runs on a loop. To exit this loop, make both proximity sensors get max value. Sticking your foot in front of it should to the trick.
    *  Furthermore, a failsafe option is provived: IMUEndCondition(). */
-  void PIDLineFollower(float P, float I, float D, int speed);
+  void PIDLineFollower(float P, float I, float D, int speed, bool dir, bool blackLine=false);
 };
 
 #define Zumo32U4ModulesLCD_h
