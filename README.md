@@ -4,7 +4,7 @@
    - IDEA: Add magnetometer-based compass function
    - IDEA: Add accelerometer-based movement
 * Additional changes to library may occur
-   - IDEA: Make initIMU() be executed as a class constructor (NOTE: More complicated than it seems. Zumo32U4.h source code manipulation [supposedly] needed to prevent USE enumeration failure [a bad thing])
+   - IDEA: Make initIMU() be executed as a class constructor (NOTE: More complicated than it seems. Zumo32U4.h source code manipulation [supposedly] needed to prevent USB enumeration failure [a bad thing])
 
 # Table of contents
 + [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
