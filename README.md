@@ -16,7 +16,7 @@
 # Zumo32U4Modules
 Simplify the programming process of your comming Zumo32U4 project. Just import this library, create the nessecary object(s), and you're good to go to use the components in accordance to constructed object(s).
 
-![image](Zumo32U4Modules_Media/Zumo32U4Modules.jpg)
+![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.jpg)
 
 NOTE: These 8 custom characters come preloaded with Zumo32U4Modules.h
 * forwardArrows
