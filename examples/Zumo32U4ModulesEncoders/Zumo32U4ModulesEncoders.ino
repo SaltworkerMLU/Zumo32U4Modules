@@ -4,7 +4,7 @@
  * Check whether motorDistance({bool}) returns a value above 10cm for each encoder. If so, reset either encoder
  */
 
-#include "Zumo32U4Modules.h"
+#include <Zumo32U4Modules.h>
 Zumo32U4ModulesEncoders zumoBot;
 void setup() {
   // put your setup code here, to run once:
@@ -16,10 +16,9 @@ void loop() {
   // put your main code here, to run repeatedly:
   //zumoBot.getMotorVelocity(); // Get only Zumo32U4 motor velocity
   zumoBot.getMotorAcceleration(); // Get both Zumo32U4 motor velocity and acceleration
-  Serial.println("Distance: " + (String)zumoBot.motorDistance(0) + "\t" + (String)zumoBot.motorDistance(1) + 
+  Serial.println("Distance: " + (String)zumoBot.motorDistance[0] + "\t" + (String)zumoBot.motorDistance[0] + 
                 "\tVelocity: " + zumoBot.motorVelocity[0] + "\t" + zumoBot.motorVelocity[1] + 
                 "\tAcceleration: " + zumoBot.motorAcceleration[0] + "\t" + zumoBot.motorAcceleration[1]);
-  if (abs(zumoBot.motorDistance(0)) > 10) { zumoBot.motorDistanceReset(0); } // When distance reaches above 10cm...
-  if (abs(zumoBot.motorDistance(1)) > 10) { zumoBot.motorDistanceReset(1); } // ...reset the encoder value surpassing 10cm
+  if (abs(zumoBot.motorDistance[0]) > 10 || abs(zumoBot.motorDistance[1]) > 10) { zumoBot.getMotorDistanceReset(); } // When distance reaches above 10cm, reset the encoder value surpassing 10cm
   delay(100);
 }

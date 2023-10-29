@@ -8,7 +8,7 @@
  * When these values are read, it's only a matter is printing all values to Serial.monitor using sprintf()
  */
 
-#include "Zumo32U4Modules.h"
+#include <Zumo32U4Modules.h>
 Zumo32U4ModulesIMU IMU;
 Zumo32U4ModulesLineSensors LineSensors;
 Zumo32U4ModulesProximitySensors ProximitySensors;
@@ -27,13 +27,13 @@ void loop() {
   IMU.getIMUvalue(); // Where 'm' only gives mag[], 'a' only acc[] & 'g' only gyro[]
   ProximitySensors.getProximitySensorValue(); // Store read values in proximitySensorValues[2]
   sprintf(buffer, "%i %i   \t%i %i %i %i %i  \t%i %i %i   \t%i %i %i   \t%i %i %i\n",
-    ProximitySensors.proximitySensorValues[0],
-    ProximitySensors.proximitySensorValues[1],
-    LineSensors.lineSensorValues[0],
-    LineSensors.lineSensorValues[1],
-    LineSensors.lineSensorValues[2],
-    LineSensors.lineSensorValues[3],
-    LineSensors.lineSensorValues[4],
+    ProximitySensors.proximitySensorValue[0],
+    ProximitySensors.proximitySensorValue[1],
+    LineSensors.lineSensorValue[0],
+    LineSensors.lineSensorValue[1],
+    LineSensors.lineSensorValue[2],
+    LineSensors.lineSensorValue[3],
+    LineSensors.lineSensorValue[4],
     *IMU.mag[0], // The use of pointers for IMU-values are needed due to how the arrays are stored in the class.
     *IMU.mag[1],
     *IMU.mag[2],

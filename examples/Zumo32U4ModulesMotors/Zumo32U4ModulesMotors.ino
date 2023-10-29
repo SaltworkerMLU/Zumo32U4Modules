@@ -17,11 +17,11 @@ void loop() {
   // put your main code here, to run repeatedly:
   left = random(-400, 401); // The motors take input(s) from -400 to 400
   right = random(-400, 401);
-  zumoBot.reverse = !zumoBot.reverse;
+  zumoBot.motorFlip();
   zumoBot.motorDrive(left, right);
   Serial.println((String)left + "\t" + (String)right);
   delay(1000);
-  zumoBot.reverse = !zumoBot.reverse;
+  zumoBot.motorFlip();
   zumoBot.motorDrive(left, right);
   Serial.println((String)-left + "\t" + (String)-right);
   delay(1000);

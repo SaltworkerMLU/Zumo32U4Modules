@@ -21,14 +21,14 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   switch(zumoBot.buttonRelease) {
-    case 1: // Print combination of buttonPresses
+    case 'A': // Print combination of buttonPresses
       Serial.println(buttons.checkButtonPress());
       delay(50);
       break;
-    case 2: // Print button as number when released
+    case 'B': // Print button as number when released
       Serial.println(buttons.getButtonRelease());
       break;
-    case 3:
+    case 'C':
         switch (buttons.checkButtonPress()) {
           case 0:
             break;
