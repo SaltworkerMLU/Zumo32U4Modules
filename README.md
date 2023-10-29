@@ -176,7 +176,7 @@ const char leftArrow[] PROGMEM = {2, 6, 14, 30, 14, 6, 2, 0}; // This character 
 
 #endif // This line always comes last in a header file
 ```
-("Zumo32U4Modules.h" last updated: 22. October 2023)
+("Zumo32U4Modules.h" last updated: 29. October 2023)
 
 # Get Started
 1.  Open Arduino IDE.
