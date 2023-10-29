@@ -16,7 +16,7 @@
 # Zumo32U4Modules
 Simplify the programming process of your comming Zumo32U4 project. Just import this library, create the nessecary object(s), and you're good to go to use the components in accordance to constructed object(s).
 
-![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.jpg)
+![image](Zumo32U4Modules_Media/Zumo32U4Modules.jpg)
 
 NOTE: These 8 custom characters come preloaded with Zumo32U4Modules.h
 * forwardArrows
@@ -69,11 +69,13 @@ public:
 };
 
 class Zumo32U4ModulesMotors : protected Zumo32U4Motors { 
+private:
+  bool reverse=false; // Are both motor values reversed?
 public: 
-  bool reverse=false;
-
   void motorDrive();
   void motorDrive(int left, int right); 
+  void motorFlip();
+
 };
 
 class Zumo32U4ModulesEncoders : protected Zumo32U4Encoders { 
@@ -81,29 +83,30 @@ private:
   long oldTime[2]; // Old time for both encoders
   float oldDistance[2]; // Old distance for both encoders
 public: 
+  float motorDistance[2];
   float motorVelocity[2];
   float motorAcceleration[2];
   int CPR=900;
 
-  float motorDistance(bool index);
-  float motorDistanceReset(bool index);
+  void getMotorDistance();
+  void getMotorDistanceReset();
   void getMotorVelocity();
   void getMotorAcceleration();
 };
 
 class Zumo32U4ModulesLineSensors : protected Zumo32U4LineSensors {
 public:
-  uint16_t lineSensorValues[5];
+  uint16_t lineSensorValue[5];
 
   Zumo32U4ModulesLineSensors();
   void getLineSensorValue();
-  void calibrateLineSensors();
+  void calibrateLineSensor();
   void getLineSensorValueCalibrated();
 };
 
 class Zumo32U4ModulesProximitySensors : protected Zumo32U4ProximitySensors {
 public:
-  uint8_t proximitySensorValues[2];
+  uint8_t proximitySensorValue[2];
 
   Zumo32U4ModulesProximitySensors();
   void getProximitySensorValue();
@@ -137,7 +140,7 @@ public:
   void buttonBootupSound(int windup=800, int attention=10); 
   void IMUEndCondition();
   void setMotorVelocity(float velocityLeft=0, float velocityRight=0);
-  void PIDLineFollower(float P, float I, float D, int speed, bool dir, bool blackLine=false);
+  void PIDLineFollower(float P, float I, float D, int speed, bool fiveLineSensors, bool dir, bool blackLine=false);
 };
 
 class Zumo32U4ModulesLCD : public Zumo32U4Modules, protected Zumo32U4LCD {
