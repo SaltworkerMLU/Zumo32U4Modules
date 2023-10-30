@@ -1,12 +1,5 @@
-# WORK IN PROGRESS
-* Make use of OLED display graphics functionality (Currently limited to text)
-* Add other sophisticated functions
-   - IDEA: Add magnetometer-based compass function
-   - IDEA: Add accelerometer-based movement
-* Additional changes to library may occur
-   - IDEA: Make initIMU() be executed as a class constructor (NOTE: More complicated than it seems. Zumo32U4.h source code manipulation [supposedly] needed to prevent USB enumeration failure [a bad thing])
-
 # Table of contents
++ [WORK IN PROGRESS](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#WORK-IN-PROGRESS)
 + [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
 + [Zumo32U4 documentation](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Zumo32U4-documentation)
   + [Pinout limitations](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Pinout-limitations)
@@ -16,6 +9,14 @@
 + [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#get-started)
   + [Method A: Download Zip with Arduino IDE](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#a-download-zip-with-arduino-ide)
   + [Method B: Manual insertion of extracted ZIP folder to Arduino sketch](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#b-manual-insertion-of-extracted-zip-folder-to-arduino-sketch)
+
+# WORK IN PROGRESS
+* Make use of OLED display graphics functionality (Currently limited to text)
+* Add other sophisticated functions
+   - IDEA: Add magnetometer-based compass function
+   - IDEA: Add accelerometer-based movement
+* Additional changes to library may occur
+   - IDEA: Make initIMU() be executed as a class constructor (NOTE: More complicated than it seems. Zumo32U4.h source code manipulation [supposedly] needed to prevent USB enumeration failure [a bad thing])
 
 # Zumo32U4Modules
 Simplify the programming process of your comming Zumo32U4 project. Just import this library, create the nessecary object(s), and you're good to go to use the components in accordance to constructed object(s).
