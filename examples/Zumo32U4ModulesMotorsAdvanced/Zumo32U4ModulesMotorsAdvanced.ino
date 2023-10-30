@@ -6,7 +6,7 @@
  * and read proximity sensors, motor velocity, and acceleration.
  */
 
-#include <Zumo32U4Modules.h>
+#include "Zumo32U4Modules.h"
 Zumo32U4ModulesLCD zumoBot;
 
 int32_t angle;

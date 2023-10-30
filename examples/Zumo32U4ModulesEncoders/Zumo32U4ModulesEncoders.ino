@@ -14,9 +14,8 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  //zumoBot.getMotorDistance(); // Get only Zumo32U4 motor distance
-  //zumoBot.getMotorVelocity(); // Get Zumo32U4 motor distance and velocity
-  zumoBot.getMotorAcceleration(); // Get Zumo32U4 motor distance, velocity and acceleration
+  //zumoBot.getMotorVelocity(); // Get only Zumo32U4 motor velocity
+  zumoBot.getMotorAcceleration(); // Get both Zumo32U4 motor velocity and acceleration
   Serial.println("Distance: " + (String)zumoBot.motorDistance[0] + "\t" + (String)zumoBot.motorDistance[0] + 
                 "\tVelocity: " + zumoBot.motorVelocity[0] + "\t" + zumoBot.motorVelocity[1] + 
                 "\tAcceleration: " + zumoBot.motorAcceleration[0] + "\t" + zumoBot.motorAcceleration[1]);

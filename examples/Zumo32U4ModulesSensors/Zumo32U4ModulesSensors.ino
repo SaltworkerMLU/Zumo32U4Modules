@@ -26,9 +26,13 @@ void loop() {
   LineSensors.getLineSensorValue(); // Store read values in lineSensorValues[5]
   IMU.getIMUvalue(); // Where 'm' only gives mag[], 'a' only acc[] & 'g' only gyro[]
   ProximitySensors.getProximitySensorValue(); // Store read values in proximitySensorValues[2]
-  sprintf(buffer, "%i %i   \t%i %i %i %i %i  \t%i %i %i   \t%i %i %i   \t%i %i %i\n",
+  sprintf(buffer, "%i %i %i %i %i %i  \t%i %i %i %i %i  \t%i %i %i   \t%i %i %i   \t%i %i %i\n",
     ProximitySensors.proximitySensorValue[0],
     ProximitySensors.proximitySensorValue[1],
+    ProximitySensors.proximitySensorValue[2],
+    ProximitySensors.proximitySensorValue[3],
+    ProximitySensors.proximitySensorValue[4],
+    ProximitySensors.proximitySensorValue[5],
     LineSensors.lineSensorValue[0],
     LineSensors.lineSensorValue[1],
     LineSensors.lineSensorValue[2],
