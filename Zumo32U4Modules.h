@@ -129,7 +129,7 @@ public:
      Class constructor initializes Protimity Sensors from the get to*/
 class Zumo32U4ModulesProximitySensors : protected Zumo32U4ProximitySensors {
 public:
-  uint8_t proximitySensorValue[2];
+  uint8_t proximitySensorValue[6];
 
   /*! Assume Zumo32U4 has 2 Proximity Sensors */
   Zumo32U4ModulesProximitySensors();

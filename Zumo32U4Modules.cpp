@@ -104,8 +104,14 @@ Zumo32U4ModulesProximitySensors::Zumo32U4ModulesProximitySensors() { Zumo32U4Pro
 
 void Zumo32U4ModulesProximitySensors::getProximitySensorValue() {
   Zumo32U4ProximitySensors::read();
-  proximitySensorValue[0] = Zumo32U4ProximitySensors::countsFrontWithLeftLeds();
-  proximitySensorValue[1] = Zumo32U4ProximitySensors::countsFrontWithRightLeds();
+  proximitySensorValue[0] = Zumo32U4ProximitySensors::countsLeftWithLeftLeds();
+  proximitySensorValue[1] = Zumo32U4ProximitySensors::countsLefttWithRightLeds();
+
+  proximitySensorValue[2] = Zumo32U4ProximitySensors::countsFrontWithLeftLeds();
+  proximitySensorValue[3] = Zumo32U4ProximitySensors::countsFrontWithRightLeds();
+
+  proximitySensorValue[4] = Zumo32U4ProximitySensors::countsRightWithLeftLeds();
+  proximitySensorValue[5] = Zumo32U4ProximitySensors::countsRightWithRightLeds();
 }
 
 void Zumo32U4ModulesIMU::initIMU() {
@@ -250,12 +256,12 @@ void Zumo32U4Modules::PIDLineFollower(float kp, float ki, float kd, int speed, b
   int lastError = 0;
 
   Zumo32U4ModulesProximitySensors::getProximitySensorValue(); // Update proximity
-  int proximity = Zumo32U4ModulesProximitySensors::proximitySensorValue[0] + 
-                  Zumo32U4ModulesProximitySensors::proximitySensorValue[1]; // Check if condition met from the get go
+  int proximity = Zumo32U4ModulesProximitySensors::proximitySensorValue[2] + 
+                  Zumo32U4ModulesProximitySensors::proximitySensorValue[3]; // Check if condition met from the get go
   while (proximity != 12) { // Run PID-controller while both proximity sensors both do not read max value
     Zumo32U4ModulesProximitySensors::getProximitySensorValue(); // Update proximity
-    proximity = Zumo32U4ModulesProximitySensors::proximitySensorValue[0] + 
-                Zumo32U4ModulesProximitySensors::proximitySensorValue[1]; 
+    proximity = Zumo32U4ModulesProximitySensors::proximitySensorValue[2] + 
+                Zumo32U4ModulesProximitySensors::proximitySensorValue[3]; 
     Zumo32U4ModulesLineSensors::getLineSensorValue();
     /*if (lineSensorValue[0] < 300) {  // If left side lineSensor value is low:
       Zumo32U4ModulesMotors::setSpeeds(-60, 200); // Turn left by 90 degrees (roughly speaking)
