@@ -8,6 +8,10 @@
 
 # Table of contents
 + [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
++ [Zumo32U4 documentation](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Zumo32U4-documentation)
+  + [Pinout limitations](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Pinout-limitations)
+  + [Installed jumper pins](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Installed-jumper-pins)
+  + [Pinout alternatives](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Pinout-alternatives)
 + [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modulesh)
 + [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#get-started)
   + [Method A: Download Zip with Arduino IDE](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#a-download-zip-with-arduino-ide)
@@ -16,7 +20,7 @@
 # Zumo32U4Modules
 Simplify the programming process of your comming Zumo32U4 project. Just import this library, create the nessecary object(s), and you're good to go to use the components in accordance to constructed object(s).
 
-![image](Zumo32U4Modules_Media/Zumo32U4Modules.jpg)
+![image](Zumo32U4Modules_Media/Zumo32U4ModulesUML.jpg)
 
 NOTE: These 8 custom characters come preloaded with Zumo32U4Modules.h
 * forwardArrows
@@ -43,6 +47,42 @@ Furthermore, this library imports the library ```#include <Zumo32U4.h>``` which 
 * isPowerPresent(): bool // is the Zumo32U4 connected to another device, e.g. computer, via. USB cable?
 
 The fact that the library "Zumo32U4.h" is imported also means you still can create objects of the ordinary Zumo32U4 classes alongside Zumo32U4Modules classes.
+# Zumo32U4 documentation
+Zumo32U4 user's guide: https://www.pololu.com/docs/0J63
+
+Zumo32U4.h source code (src): https://pololu.github.io/zumo-32u4-arduino-library/index.html
+## Pinout limitations
+The Zumo32U4 user's guide provides the pinout of the Zumo32U4 (link: https://www.pololu.com/docs/0J63):
+
+![image](https://a.pololu-files.com/picture/0J11462.1200.jpg?ead95d85e8f3f8b9f046e9c3e455067a)
+
+![image](https://a.pololu-files.com/picture/0J11463.1200.jpg?d05e32ece41cc1e53560773cba275dea)
+
+Note how pin 4 & 20 have conflicting assignments: 
+* Pin 4 is assigned to both "Right prox sensor" & "Line sensor 4"
+* Pin 20 is assigned to both "Left prox sensor" & "Line Sensor 2"
+## Installed jumper pins
+To compensate for the lacking pins, 2 jumper pins (the blue ones) are provided to let the user switch between additional proximity and line sensors.
+
+![image](Zumo32U4Modules_Media/Pololu0J8696irs08a_up&down.png)
+
+Where:
+* "Right prox sensor" = RGT
+* "Left prox sensor" = LFT
+* "Line sensor 2" = DN2
+* "Line sensor 4" = DN4
+
+This way, the Zumo32U4 configuration options using jumper pins are as follows:
+* RGT -> 4 <- DN4
+* LFT -> 20 <- DN2
+
+## Pinout alternatives
+In order to use all 3 proximity sensors & 5 line sensors simultaneously, sacrifices must be made.
+
+2 pins must be made available for the remaining proximity sensor(s) and/or line sensor(s). One way to do this, as the documentation suggests, is to sacrifice the display to make use of pin 0 and 1. 
+
+By soldering the remaining proximity sensor(s) and/or line sensor(s) to pin 0 and 1 and then assigning these pins to their sensors in the code, it will be possible to make use of all 3 proximity sensors & 5 line sensors simultaneously.
+
 # Zumo32U4Modules.h
 Here is "Zumo32U4Modules.h" with almost no comments to shorten it.
 ``` 
@@ -106,7 +146,7 @@ public:
 
 class Zumo32U4ModulesProximitySensors : protected Zumo32U4ProximitySensors {
 public:
-  uint8_t proximitySensorValue[2];
+  uint8_t proximitySensorValue[6];
 
   Zumo32U4ModulesProximitySensors();
   void getProximitySensorValue();
@@ -176,7 +216,7 @@ const char leftArrow[] PROGMEM = {2, 6, 14, 30, 14, 6, 2, 0}; // This character 
 
 #endif // This line always comes last in a header file
 ```
-("Zumo32U4Modules.h" last updated: 29. October 2023)
+("Zumo32U4Modules.h" last updated: 30. October 2023)
 
 # Get Started
 1.  Open Arduino IDE.
