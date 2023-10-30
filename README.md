@@ -2,7 +2,7 @@
 + [WORK IN PROGRESS](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#WORK-IN-PROGRESS)
 + [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
 + [Zumo32U4 documentation](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Zumo32U4-documentation)
-+ [Zumo32U4 pinout](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Pinout)
+  + [Zumo32U4 pinout](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4-pinout)
   + [Installed jumper pins (proximity sensors vs. line sensors)](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#installed-jumper-pins-proximity-sensors-vs-line-sensors)
   + [Pinout alternatives](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Pinout-alternatives)
 + [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modulesh)
