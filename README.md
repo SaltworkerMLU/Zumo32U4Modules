@@ -2,8 +2,8 @@
 + [WORK IN PROGRESS](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#WORK-IN-PROGRESS)
 + [Zumo32U4Modules](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modules)
 + [Zumo32U4 documentation](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Zumo32U4-documentation)
-  + [Pinout limitations](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Pinout-limitations)
-  + [Installed jumper pins](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Installed-jumper-pins)
++ [Zumo32U4 pinout](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Pinout)
+  + [Installed jumper pins (proximity sensors vs. line sensors)](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Installed-jumper-pins-(proximity-sensors-vs.-line-sensors))
   + [Pinout alternatives](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#Pinout-alternatives)
 + [Zumo32U4Modules.h](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#zumo32u4modulesh)
 + [Get started](https://github.com/SaltworkerMLU/Zumo32U4Modules/tree/main#get-started)
@@ -52,7 +52,7 @@ The fact that the library "Zumo32U4.h" is imported also means you still can crea
 Zumo32U4 user's guide: https://www.pololu.com/docs/0J63
 
 Zumo32U4.h source code (src): https://pololu.github.io/zumo-32u4-arduino-library/index.html
-## Pinout limitations
+## Zumo32U4 Pinout
 The Zumo32U4 user's guide provides the pinout of the Zumo32U4 (link: https://www.pololu.com/docs/0J63):
 
 ![image](https://a.pololu-files.com/picture/0J11462.1200.jpg?ead95d85e8f3f8b9f046e9c3e455067a)
@@ -62,7 +62,7 @@ The Zumo32U4 user's guide provides the pinout of the Zumo32U4 (link: https://www
 Note how pin 4 & 20 have conflicting assignments: 
 * Pin 4 is assigned to both "Right prox sensor" & "Line sensor 4"
 * Pin 20 is assigned to both "Left prox sensor" & "Line Sensor 2"
-## Installed jumper pins
+## Installed jumper pins (proximity sensors vs. line sensors)
 To compensate for the lacking pins, 2 jumper pins (the blue ones) are provided to let the user switch between additional proximity and line sensors.
 
 ![image](Zumo32U4Modules_Media/Pololu0J8696irs08a_up&down.png)
